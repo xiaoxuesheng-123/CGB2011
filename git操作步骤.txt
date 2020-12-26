@@ -1,0 +1,6 @@
+1.获取 git clone
+之后 git pull
+2.上传 第一次 git clone
+新文件添加（修改已有文件不需要add）git add .
+提交文件到本地仓库 git commit -m ""
+推送到远端仓库 git push
