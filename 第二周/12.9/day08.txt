@@ -1,0 +1,272 @@
+一,this关键字
+	--1,概述
+		代表的是本类对象 的引用
+		用来调用 本类里的 成员变量.方法
+		大多数情况下,都可以省略
+		必须出现的场景有两个:
+			--当成员变量名 和 局部变量名 相同时
+			--构造方法间 互相调用时
+	--2,场景1
+		package cn.tedu.oop;
+		//测试 this关键字
+		//总结
+		//1,当成员变量  和 局部变量 同名啦,用this调用成员变量
+
+		public class Test1_This {
+			public static void main(String[] args) {
+				//TODO
+		//		new Person().show();
+				new Person().test();
+			}
+		}
+		class Person{
+			//当成员变量 和 局部变量 同名时,使用this
+			int sum = 10;
+			int age = 20;//成员变量
+			
+			public void test(){
+				int age = 10 ;
+				age = 100 ;//改了局部变量
+		System.out.println(age);//局部变量,100
+				
+				this.age = 200 ;//改了成员变量
+		System.out.println(this.age);//成员变量,200
+			}
+			
+			public void show(){
+				int age = 10;//局部变量
+		System.out.println(age);//就近原则,使用了局部变量,10?
+				//TODO 使用同名的 age成员变量
+		//TODO this代表本类对象的引用,可以调用本类的资源
+		//本质上,底层帮你创建了一个本类对象,叫this
+		//Person this = new Person();
+		//场景1:当同名的成员变量和局部变量,用this调用成员变量
+				System.out.println(this.age);
+				//使用了成员变量,10
+		//		System.out.println(this.sum);
+				//不同名时,可以省略this
+				System.out.println(sum);
+			}
+		}
+	--3,场景2
+		package cn.tedu.oop;
+		//测试 this关键字
+		//总结:
+		//1,如果想要完成 构造方法间的调用,使用this
+		//2,如果this出现在构造方法里,必须是第一条语句
+		public class Test2_This {
+			public static void main(String[] args) {
+			}
+		}
+		class Person2{
+			//TODO Constructors....
+			public Person2(){
+				//无参 构造 调用 含参 构造? --必须是第一条语句
+				this(10);
+				System.out.println(1);
+			}
+			public Person2(int age){
+			}
+			public Person2(String name){
+			//含参 构造  调用 无参 构造--必须是第一条语句
+				this();
+				System.out.println(1);
+			}
+			public Person2(String name,int age){
+				
+			}
+		}
+二,访问控制符
+	public > protected > default > private
+三,继承
+	--1,概述
+		是父类和子类之间的关系.
+		继承只能继承一个父类.
+		子类继承了父类以后,就拥有了父类的全部功能
+		好处:提高了父类里代码的 复用性 ,减少了子类代码的编写
+	--2,特点
+		--使用extends关键字
+		--相当于子类把父类的功能复制了一份
+		--java只支持单继承
+		--继承可以传递（爷爷，儿子，孙子的关系）
+		--不能继承父类的私有成员
+		--继承多用于功能的修改，子类可以拥有父类的功能的同时，进行功能拓展
+		--像是is a 的关系
+	--3,测试
+		package cn.tedu.oop;
+		//测试 继承
+		public class Test3_Extends {
+			public static void main(String[] args) {
+				//创建子类对象测试 
+		//		new Son().eat();//使用了爸爸类里方法
+				new Son().xiaqi();//使用了爷爷类里方法
+			}
+		}
+		//4,父类 抽取子类的 共性代码
+		class Yeye{
+			public void xiaqi(){
+				System.out.println("爷爷泡的茶");
+			}
+		}
+		class Baba extends Yeye{
+			//6,父类的私有成员 ,无法被继承
+			private void eat(){//提高复用性
+				System.out.println("吃猪肉");
+			}
+		}
+		//1,使用关键字extends表示继承关系
+		//5,java只支持单继承
+		class Son extends Baba{
+			//3,继承关系是一种强制的依赖关系-强耦合
+			//2,子类可以使用父类的所有功能
+		}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+		
+四,super关键字
+	--1,用在子类里.调用父类的数据
+	--2,super如果出现在构造方法里,必须是第一条语句
+五,方法的重写override
+	--1,概述
+		前提:发生父子关系
+		子类继承了父类后,子类可以使用父类的所有内容,而且子类还可以添加扩展的功能,而且子类还能改(重写)父类的功能.
+	--2,特点
+		--发生在子类中,想改父类原来的功能
+		--在子类中的方法声明/方法签名 和父类一样
+			--方法声明: 方法的返回值 方法名(参数列表)
+六,继承的使用	
+	--1,成员变量
+		package cn.tedu.oop;
+		//测试 继承的  成员变量 使用
+		//总结:
+		//1,子类想要用父类的成员变量,,,通过super使用
+		//2,super在底层帮你创建了一个父类的对象
+		//3,通过super使用父类的功能
+		public class Test4_UseExtends {
+			public static void main(String[] args) {
+				new Zi().show();
+			}
+		}
+		class Fu{
+			String name ="rose" ;
+		}
+		class Zi extends Fu{
+			String name ="jack";
+			int age = 10 ;
+			public void show(){
+				int  age = 20 ;
+				System.out.println(age);//就近原则,使用局部变量
+				System.out.println(this.age);//使用成员变量
+				System.out.println(name);//用了自己的jack
+				//想要在子类中,用父类的name--使用super
+		//super表示父类对象的一个引用,Fu super = new Fu();
+				//super专门用来调用父类的功能
+				super.name="tommy";
+				System.out.println(super.name);//用了父类的
+			}
+		}
+
+	--2,成员方法
+		package cn.tedu.oop;
+		//测试 继承的  成员方法 使用
+		//总结:
+		//1,子类继承父类后,
+		//2,可以使用父类的所有功能(除了private)
+		//3,还可以进行功能扩展
+		//4,还可以 修改 父类的功能--重写--
+		//在不影响父类原有功能的前提下,把子类的功能进行修改
+		//5,重写的要求:继承关系+有权限+方法声明和父类一样
+		//6,开闭原则OCP:关闭源码修改,开放功能扩展
+		public class Test5_UseExtends {
+			public static void main(String[] args) {
+				Zi2 zi = new Zi2();
+				//没重写,用父类的.重写后,用子类的
+				zi.eat();
+				zi.coding();//使用了自己扩展的
+			}
+		}
+		class Fu2{
+			public void eat(){
+				System.out.println("eat()...");
+			}
+		}
+		//1,子类可以:::继承父类的(除了private)..扩展自己的 .
+		class Zi2 extends Fu2{
+			public void coding(){
+				System.out.println("java");
+			}
+			//2,改 父类的功能 -- 方法的重写
+		//要求:子类的方法声明必须和父类一样+有足够的权限
+			public void eat(){
+		//		super.eat();//调用父类的eat(),原来的功能没有影响!
+				System.out.println("干饭人");
+			}
+		}
+
+
+	--3,构造方法
+		package cn.tedu.oop;
+		//测试 继承的  构造方法 使用
+		//总结
+		//1,子类继承了父类后,构造方法里,默认隐藏着super()
+		//2,当父类中不存在无参构造时(只提供了含参构造),
+			//子类只能调用父类的含参构造
+		//3,父类的构造方法 可以被继承吗 --不可以
+		//4,哪些资源不可以继承 --私有的+构造方法
+		public class Test6_UseExtends {
+			public static void main(String[] args) {
+				//先执行 父类的 构造方法 -- super()
+				//再执行子类自己的
+				new Zi3();
+			}
+		}
+		class Fu3{
+			public Fu3(){}
+			public Fu3(int a){
+				System.out.println("父类的 含参 构造方法");
+			}
+		}
+		class Zi3 extends Fu3{
+			
+			public Zi3(){
+		//1,隐藏的,默认就存在,而且在第一条语句
+		//		super();//2,主动找父类的 无参 构造方法
+				super(6);//无参构造没了!!
+				System.out.println("子类的 构造方法");
+			}
+		}
+	
+
+
+扩展
+	--1,面试题
+		--overload和override的区别
+			overload是重载:
+				在一个类里的现象.
+				方法名相同参数列表不同.
+				好处是:体现程序的灵活
+			override是重写:
+				在父子关系中,子类里的现象.
+				好处是:不影响原来的功能,改的是子类的.
+				要求:继承关系+有足够的权限+方法声明和父类一样
+		--this和super的区别
+			this代表本类对象,用来调用本类的成员变量/方法 
+			super代表父类对象,用来调用父类的成员变量/方法 
+			在构造方法里出现时,都得是第一条语句.
+			this和super不能同时出现.
+			
+	--2,了解OCP开闭原则

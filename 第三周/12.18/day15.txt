@@ -1,0 +1,357 @@
+一,list练习
+	--1,代码
+		package cn.tedu.util;
+
+		import jdk.internal.util.xml.impl.Input;
+
+		import java.io.*;
+		import java.util.ArrayList;
+		import java.util.List;
+		import java.util.Random;
+
+		public class Test {
+		    public static void main(String[] args) throws IOException {
+		//        --读取1.txt里的数据,并存入list中
+		//        method();
+		//        --给list集合里的元素去重
+		        method2();
+		    }
+		    private static void method2() {
+		       List<Integer> list =  new ArrayList();
+		       //存随机数
+		       for (int i = 0; i < 10; i++) {
+		           int r = new Random().nextInt(100);
+		           //判断,没有再加
+		           if(! list.contains(r)){
+		                list.add(r);
+		           }
+		       }
+		       System.out.println(list);
+		    }
+		    private static void method() throws IOException {
+		        //list集合
+		        List<Integer> list = new ArrayList();
+		        //读取流
+		        InputStream in = new BufferedInputStream(
+		            new FileInputStream("D:\\iotest\\1.txt"));
+		        //开始读取
+		        int b = 0 ;//存读到的数据
+		        while ( (b = in.read()) != -1){
+		            //把读到的数据,存入list
+		            list.add(b);
+		        }
+		        //释放资源
+		        in.close();
+		        System.out.println(list);
+		    }
+
+		}
+
+
+
+二,ArrayList
+	--1,概述
+		是List接口的实现类,拥有List接口的所有特点.
+		有序 可重复 能存null 有下标.
+		ArrayList本质上是一个数组结构,底层维护了一		个Object[].查询效率高.
+		数组的容量会自动调整.
+	--2,创建对象
+		ArrayList() 
+        构造一个初始容量为 10 的空列表
+	--3,测试
+		package cn.tedu.util;
+		import java.util.ArrayList;
+		import java.util.Arrays;
+		import java.util.Iterator;
+		import java.util.ListIterator;
+
+		//测试 ArrayList
+		public class Test1_ArrayList {
+		    public static void main(String[] args) {
+		        //1,创建对象
+		 //TODO 原理:
+		// jdk1.6是一旦创建ArrayList对象就分配10个容量的Object[] elementData
+		 //jdk1.8 是当第一次添加元素时,才分配10个容量的Object[] elementData
+		 // 当调用add()时,拿着数据,存到了数组里,方便以后的查询,
+		  // 而且保证了存储顺序
+		        ArrayList list = new ArrayList();
+		        //2,调用方法
+		        //有序 + 可重复 + 存null
+		        list.add(100);
+		        list.add(0,200);
+		        list.add(null);
+		        list.add(100);
+		        list.add(null);
+		        System.out.println(list);
+		        //有下标
+		        //TODO 迭代list集合的4种方式
+		        Iterator it = list.iterator();
+		        while (it.hasNext()){
+		            //取元素 + 后移指针
+		            Object o = it.next();
+		            System.out.println(o);
+		        }
+		        ListIterator it2 = list.listIterator();
+		        while(it2.hasNext()){
+		            Object o = it2.next();
+		            System.out.println(o);
+		        }
+		        for (int i = 0; i < list.size() ; i++) {
+		            Object o = list.get(i);
+		            System.out.println(o);
+		        }
+		        for (Object o : list) {
+		            System.out.println(o);
+		        }
+
+		        //练习:模拟ArrayList存数据
+		   //TODO 1,数组存数据,为了存的类型丰富,
+		   // 最好是Object类型,默认容量是10,不够自动扩容
+		       int size = 0;
+		       Object[] a = new Object[10];
+		       a[size++] = 10;
+		       a[size++] = 1.1;
+		       a[size++] = "hello";
+		       a[size++] = true;
+		   //TODO 2,容量不够就扩容
+		       if(size > a.length){
+		   //TODO 3,底层扩容方式:是原数组的1.5倍
+		           Object[] b = Arrays.copyOf(a, (int)(a.length*1.5));
+		           System.out.println(b);
+		       }
+		    }
+		}
+
+
+三,LinkedList
+	--1,概述
+		是List接口的实现类,拥有List接口的所有特点.
+		有序 有索引 可重复 可以存null
+		LinkedList底层维护了一个链表的结构.
+		适合增删业务.
+	--2,创建对象
+		LinkedList() 
+      构造一个空列表。
+	--3,常用方法
+		--继承自上层接口的
+		--自己扩展的
+			 void addFirst(E e) 
+			 void addLast(E e) 
+			 E element() 
+				E getFirst() 
+			 E getLast() 
+			 E removeFirst() 
+			  E removeLast()  
+			boolean offer(E e) 
+			 boolean offerFirst(E e) 
+			 boolean offerLast(E e) 
+			 E peek() 
+			  获取但不移除此列表的头（第一个元素）。 
+			 E peekFirst() 
+			          获取但不移除此列表的第一个元素；如果此列表为空，则返回 null。 
+			 E peekLast() 
+			 
+			 E poll() 
+			          获取并移除此列表的头（第一个元素） 
+			 E pollFirst() 
+			          获取并移除此列表的第一个元素；如果此列表为空，则返回 null。 
+			 E pollLast() 
+			 
+			 E pop() 
+			          从此列表所表示的堆栈处弹出一个元素。 
+			 void push(E e) 
+			          将元素推入此列表所表示的堆栈。 
+		
+	--4,测试
+		package cn.tedu.util;
+
+		import java.util.LinkedList;
+
+		//测试 LinkedList
+		public class Test2_LinkedList {
+		    public static void main(String[] args) {
+		        //1,创建对象
+		        //空的链表
+		        LinkedList<String> list = new LinkedList();
+		        //2,调用方法
+		        //TODO 继承自上层接口的
+		 //底层是一个链表结构,每个链表上的元素叫Node
+		 //Node间维护的关系,是靠prev绑定前面一个元素的关系
+		 //next绑定后面一个元素的关系
+		        list.add("蜘蛛侠");
+		        list.add("猪猪侠");
+		        list.add("皮皮霞");
+		        list.add("猪猪侠");
+		        list.add(null);
+		        //自己扩展的--操作首尾元素
+		        list.addFirst("灭霸");//添加首元素
+		        list.addLast("美队");//添加尾元素
+		        System.out.println(list);
+		        System.out.println(list.getFirst());//获取首元素
+		        System.out.println(list.getLast());//获取尾元素
+		        System.out.println(list.removeFirst());//移除首元素
+		        System.out.println(list.removeLast());//移除尾元素
+		        //TODO--操作首尾元素 第二套API
+		//        boolean offerFirst(E e)
+		//        boolean offerLast(E e)
+		//        E peekFirst()
+		//        E peekLast()
+		//        E pollFirst()
+		//        E pollLast()
+
+		    }
+		}
+
+
+四,Set接口
+	--1,概述
+		Set接口是Collection接口的子接口
+		可以继承Collection接口的所有功能,也可以扩展
+		接口不能new,学他的共性方法
+	--2,特点
+		不重复
+		没有索引
+		存一个null
+		无序
+	--3,常用方法
+		全是继承自Collection接口的方法
+五,HashSet
+	--1,概述
+		实现 Set 接口,底层是 由哈希表/散列表 的结构
+	--2,创建对象
+		HashSet() 
+      构造一个新的空 set，其底层 HashMap 实例的默认初始容量是 16，加载因子是 0.75。
+	--3,常用方法
+		略
+	--4,测试
+		package cn.tedu.util;
+
+		import java.util.HashSet;
+		import java.util.Iterator;
+
+		//测试 Set接口
+		public class Test3_HashSet {
+		    public static void main(String[] args) {
+		        //1,创建 多态 对象
+		 //TODO 当创建HashSet对象时,本质上是创建了一个HashMap对象
+		        HashSet<String> set = new HashSet();
+		        //2,调用方法
+		        //TODO 全是继承自Collection接口的方法
+		        set.add("tony");
+		 //TODO 当往set里加数据时,本质上是往map里加了
+		        set.add("jerry");
+		        set.add("tom");
+		        set.add("rose");
+		        set.add("tony");
+		        set.add("tom");
+		        set.add("rose");
+		        set.add(null);
+		        set.add(null);
+		        //特点:不重复!! + 无序 + 一个null + 没下标
+		        System.out.println(set);
+		        //TODO 迭代set集合
+		        //方式1: Iterator<E> iterator()
+		        Iterator<String> it = set.iterator();
+		        while (it.hasNext()){
+		            String s = it.next();
+		            System.out.println(s);
+		        }
+		        //方式2: 增强for
+		        for(String s : set){
+		            System.out.println(s);
+		        }
+		    }
+		}
+
+
+	
+六,Map接口
+	--1,概述
+		数据的格式是K V ,键值对儿.
+		K不能重复.一般 K和V是一对一的关系.
+		可以根据K获取V的值
+	--2,常用方法
+		V put(K key, V value)  
+		V get(Object key)  
+		void clear()  
+		boolean containsKey(Object key)  
+		boolean equals(Object o)  
+		int hashCode() 
+		boolean isEmpty()  
+		V remove(Object key)  
+		int size()  
+		Collection<V> values()  
+		Set<K> keySet() 
+		Set<Map.Entry<K,V>> entrySet() 
+	--3,测试
+		package cn.tedu.util;
+
+		import java.util.HashMap;
+		import java.util.Map;
+		import java.util.Set;
+
+		//测试 Map接口
+		public class Test4_Map {
+		    public static void main(String[] args) {
+		        //1,创建 多态对象
+		        Map<Integer,String> map = new HashMap();
+		        //2,调用方法
+		        map.put(9527,"唐伯虎");
+		//TODO 必须添加键值对的数据.可以同时约束,k和v的数据类型
+		        map.put(9528,"秋香姐");
+		        map.put(9529,"石榴姐");
+		        //TODO 当key相同时,原来的value会被覆盖
+		        map.put(9528,"秋香姐2");
+		 //TODO {9527=唐伯虎, 9528=秋香姐2, 9529=石榴姐}
+		        System.out.println(map);
+		        //根据key获取value
+		        System.out.println(map.get(9527));
+		//        map.clear();//清空集合
+		        //判断是否包含指定的key
+		        System.out.println(map.containsKey(9528));
+		        //判断是否包含指定的value
+		        System.out.println(map.containsValue(100));
+		        //判断是否相等
+		        System.out.println(map.equals(999));
+		        //获取哈希码值
+		        System.out.println(map.hashCode());
+		        //判断是否为空map
+		        System.out.println(map.isEmpty());
+		        //获取map长度
+		        System.out.println(map.size());
+		        //根据key移除记录,并返回value的值null
+		        System.out.println(map.remove(9529));
+		        //TODO 迭代map集合
+		//TODO 方式1:Set<K> keySet()-把map里的key们存入set
+		        Set<Integer> keys = map.keySet();
+		        //迭代set,获取每个key
+		        for (Integer  key : keys){
+		            //拿着key回map里找value
+		            String value = map.get(key);
+		            if(value.equals("秋香姐2")){
+		                System.out.println(value+",加个微信呗~");
+		            }
+		            System.out.println(key + value);
+		        }
+		//TODO 方式2:Collection<V> values()--把map里的value们存入Collection
+		        //调用values(),遍历Collection获取每个value
+
+		//TODO 方式3:Set<Map.Entry<K,V>> entrySet()
+		//          --把map里的key和value一起存入set
+		        //调用entrySet(),迭代set获取每个Entry,
+		        //调用Entry提供的方法获取key和value
+		        
+		    }
+		}
+
+
+
+扩展:
+	--1,面试题:
+		--集合和数组的区别
+		--ArrayList和LinkedList的区别
+		--ArrayList的原理
+		--List的迭代方式有几种,有什么区别
+
+
+		

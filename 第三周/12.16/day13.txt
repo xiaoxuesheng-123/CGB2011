@@ -1,0 +1,314 @@
+一,File工具类
+	--1,代码
+		package cn.tedu.api;
+		import java.io.File;
+		import java.io.IOException;
+		import java.util.Arrays;
+
+		//测试 File文件流
+		public class Test6_File {
+		    public static void main(String[] args) throws IOException {
+		        //1,创建对象 -- 指定文件的路径
+		        File file =
+		                new File("D:\\iotest\\1.txt");
+		        //2,调用方法
+		        System.out.println(file.getName());//获取文件名
+		        System.out.println(file.length());//获取文件大小
+		        System.out.println( file.exists() );//判断是否存在
+		        System.out.println( file.isFile() );//判断是文件吗
+		        System.out.println( file.isDirectory() );//判断是文件夹吗
+		        System.out.println( file.getParent() );//获取父路径
+		        System.out.println( file.getAbsolutePath() );//获取完整路径
+		        //TODO
+		        file =new File("D:\\iotest\\2.txt");//不存在的文件
+		        System.out.println(file.createNewFile());//创建新文件
+
+		        file =new File("D:\\iotest\\a");
+		        System.out.println(file.mkdir());//新建文件夹
+
+		        file =new File("D:\\iotest\\x\\y\\z");
+		        System.out.println(file.mkdirs());//新建文件夹
+
+		        //删除 文件 或者 空文件夹
+		        file =new File("D:\\iotest\\2.txt");
+		        System.out.println(file.delete());
+
+		        //列出 文件夹 的资源
+		        file =new File("D:\\iotest");
+		        //把文件名列出来
+		        String[] ss = file.list();
+		        //[1.txt, a, x]
+		   System.out.println( Arrays.toString(ss) );
+
+		//把所有资源列出来,并封装成一个一个的File对象存入File[]
+		        File[] fs = file.listFiles();
+		  //[D:\iotest\1.txt, D:\iotest\a, D:\iotest\x]
+		        System.out.println( Arrays.toString(fs) );
+
+		        //File[]里存的就是一个一个的File,如果遍历数组,
+		        //就会得到每个File,就可以用上面的各种方法
+		        File a = fs[0];
+		        System.out.println(a.length());
+		        System.out.println(a.getName());
+
+		        //TODO 练习:获取指定文件夹里的所有资源名称
+		        //创建File,封装指定的路径
+		        File f = new File("D:\\WeChat");
+		        //列出所有资源
+		        File[] res = f.listFiles();
+		        //遍历
+		        for (int i = 0; i < res.length; i++) {
+		            //获取每个资源ff
+		            File ff  = res[i];
+		            //判断,是文件就打印文件名
+		            if(ff.isFile()){
+		                System.out.println(ff.getName());
+		            }else if(ff.isDirectory()){
+		                //判断,是文件夹就打印文件夹名
+		                System.out.println(ff.getName());
+		            }
+		        }
+		    }
+		}
+
+	--2,升级
+		package cn.tedu.api;
+
+		import java.io.File;
+
+		//测试 File工具类
+		public class Test1_File {
+		    public static void main(String[] args) {
+		       method(); //练习
+		    }
+		    //TODO 统计 文件夹里 文件的总大小
+		    public static void method() {
+		        //把指定的路径 封装成File对象,用方法
+		 File file = new File("D:\\iotest");
+		        //列资源
+		        File[] fs = file.listFiles();
+		        //遍历数组
+		        long sum  = 0 ;//定义变量,记录总和
+		        for (int i = 0; i < fs.length; i++) {
+		           //获取每个资源f
+		            File f = fs[i];
+		            //判断,资源是文件就求和
+		            if(f.isFile()){
+		                sum = sum + f.length();//求和
+		            }
+		        }
+		        System.out.println("文件的总大小是: "+sum);
+		    }
+
+		}
+
+	--3,求目录的总大小
+		--1,列出资源
+		--2,判断,是文件就直接length()求和
+		--3,判断,是文件夹  就开始 重复的执行1 2 3
+		--4,代码
+			package cn.tedu.api;
+
+			import java.io.File;
+			import java.util.Scanner;
+
+			//测试 File工具类
+			public class Test1_File {
+			    public static void main(String[] args) {
+			//       method(); //统计 文件夹里 文件的总大小
+			       System.out.println("请输入 文件夹路径:");
+			       String dirpath = new Scanner(System.in).nextLine();
+			       //封装文件夹路径
+			       File dir = new File(dirpath);
+			       long total = method2(dir); //求目录的总大小
+			        System.out.println(total);
+			    }
+			    //求目录的总大小
+			    private static long method2(File wjj) {
+			        File[] fs = wjj.listFiles();//列出资源
+			        //遍历数组,获取每个资源fs[i]
+			        long sum = 0;//定义变量,记录和
+			        for (int i = 0; i < fs.length; i++) {
+			    //      判断,是文件就直接length()求和
+			            if(fs[i].isFile()){
+			                sum = sum + fs[i].length();//求和
+			            }else if(fs[i].isDirectory()){
+			             //递归--在方法内部调用自己--因为发生了和自己一样的过程
+			             // 因为是文件夹的话就开始重复执行method2()的过程了
+			                sum = sum + method2(fs[i]);
+			            }
+			        }
+			        return sum ;//总和返回调用位置
+			    }
+			    //TODO 统计 文件夹里 文件的总大小
+			    public static void method() {
+			        //把指定的路径 封装成File对象,用方法
+			 File file = new File("D:\\iotest");
+			        //列资源
+			        File[] fs = file.listFiles();
+			        //遍历数组
+			        long sum  = 0 ;//定义变量,记录总和
+			        for (int i = 0; i < fs.length; i++) {
+			           //获取每个资源f
+			            File f = fs[i];
+			            //判断,资源是文件就求和
+			            if(f.isFile()){
+			                sum = sum + f.length();//求和
+			            }
+			        }
+			        System.out.println("文件的总大小是: "+sum);
+			    }
+
+			}
+
+二,字节流读写
+	--1,字节流读取in:指从 磁盘 读取到  程序的过程
+		--InputStream 
+			--父类,通常提供共性的功能
+			--public abstract class InputStream
+			--不能new,只能学习提供共性方法
+			--共性方法:
+				abstract int read() 
+				int read(byte[] b) 
+				int read(byte[] b, int off, int len) 
+ 				void close()  
+		--FileInputStream 
+			--子类,通常继承和重写
+			--从文件系统中的某个文件中获得输入字节
+			--创建对象
+				FileInputStream(File file) 
+				FileInputStream(String name) 
+		--BufferedInputStream 
+			--子类,缓冲能力,有内部缓冲区数组
+			--创建对象
+				BufferedInputStream(InputStream in) 
+	--2,测试读取流
+		package cn.tedu.api;
+		import java.io.*;
+
+		//测试 读取流
+		public class Test2_In {
+		    public static void main(String[] args) throws IOException {
+		//        method();//FileInputStream读取流读取流
+		        method2();//BufferedInputStream读取流
+		    }
+		    //BufferedInputStream读取流
+		    private static void method2() throws IOException {
+		        //1,创建多态对象测试
+		//      BufferedInputStream(InputStream in)
+		        InputStream in =
+		                new BufferedInputStream(
+		                //触发BufferedInputStream的含参构造
+		                   new FileInputStream(
+		                           "D:\\iotest\\1.txt")
+		                );
+		        //2,开始读取
+		        int b = 0 ;//定义变量,记录读到的数据
+		        //一个一个的读,直到没数据了,返回-1就结束啦
+		        while( ( b = in.read() ) != -1){
+		            //打印读到的数据
+		            System.out.println(b);
+		        }
+		        //3,释放资源
+		        in.close();
+		    }
+		    //普通读取流
+		    public static void method() throws IOException {
+		    //1,创建多态对象--创建子类对象时,只提供了含参构造
+		//FileInputStream(File file)
+		//InputStream in = new FileInputStream( new File("D:\\iotest\\1.txt"));
+
+		//FileInputStream(String name)--name是文件路径
+		        InputStream in =
+		           new FileInputStream("D:\\iotest\\1.txt");
+		        //2,开始读取
+		        //多态对象,只能调用父类的功能,统一调用的标准
+		//        int data = in.read();//一个一个的读取
+		//        System.out.println(data);
+		//        int data2 = in.read();
+		//        System.out.println(data2);
+		//        int data3 = in.read();
+		//        System.out.println(data3);
+
+		//     没数据了,再读,会读到什么?? -- 永远得到-1
+		//        int data4 = in.read();
+		//        System.out.println(data4);
+		//        int data5 = in.read();
+		//        System.out.println(data5);
+		//        int data6 = in.read();
+		//        System.out.println(data6);
+		        // TODO 改造读取
+		        //循环结构 重复读,读到-1就停
+		        int b = 0;//定义变量,记录读到的数据
+		        //read()就是一个一个读,读到-1就是没数据了,就停
+		        while ( ( b = in.read() ) != -1){
+		            System.out.println(b);
+		        }
+		        //3,释放资源
+		        in.close();
+		//TODO 释放资源后,还能读吗??--不能,Stream Closed
+		//        int data7 = in.read();
+		//        System.out.println(data7);
+		    }
+		}
+	
+	--3,字节流写出out:指 把程序中的数据 写出 到磁盘里
+		--OutputStream 
+			--父类 ,是一个抽象类,所以共性方法
+			--共性方法
+				void close() 
+				void flush() 
+				void write(byte[] b) 
+				void write(byte[] b, int off, int len) 
+				abstract  void write(int b) 
+		--FileOutputStream 子类
+			--子类,学习创建对象
+			--创建对象
+				FileOutputStream(File file) 
+				FileOutputStream(String name) 
+				FileOutputStream(File file, boolean append)
+				FileOutputStream(String name, boolean append) 
+		--BufferedOutputStream 子类
+			--子类,学习创建对象
+			
+	--4,测试写出流
+		package cn.tedu.api;
+
+		import java.io.FileNotFoundException;
+		import java.io.FileOutputStream;
+		import java.io.IOException;
+		import java.io.OutputStream;
+
+		//测试 写出流:
+		public class Test3_Out {
+		    public static void main(String[] args)
+		            throws IOException {
+		        method();//FileOutputStream写出
+		//        method2();//BufferedOutputStream高效写出流
+		    }
+		    //普通流写出
+		    public static void method() throws IOException {
+		        //1,创建多态对象测试
+		        //FileOutputStream(String name)--数据覆盖
+		//        OutputStream out =new FileOutputStream("D:\\iotest\\1.txt");
+
+		 //FileOutputStream(String name, boolean append)
+		 //第二个参数如果是true,就是数据追加模式
+		 OutputStream out =new FileOutputStream(
+		         "D:\\iotest\\1.txt",true);
+		        //2,开始写出
+		        out.write(98);
+		        out.write(99);
+		        out.write(97);
+		        out.write(97);
+		        //3,释放资源
+		        out.close();
+
+
+		    }
+		}
+
+
+扩展:
+	--利用递归删除文件夹
+	--高级流和普通流的区别

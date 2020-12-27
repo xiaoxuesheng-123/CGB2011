@@ -1,0 +1,235 @@
+一,数组
+	--1,概述	
+		可以存放 多个 相同类型的 数据
+		英文Array,标志是[]
+		数组中的元素都有下标(从0开始)
+	--2,创建数组
+		一般分为动态初始化和静态初始化
+		
+		语法:数组类型[] 数组名 = new 数组类型[数组的长度];
+		--动态初始化
+			int[] a = new int[5];//a是引用类型的变量
+		--静态初始化
+			int[] b = new int[]{1,2,3,4,5};
+			int[] c = {1,2,3,4,5};
+		--练习:把hello存入数组里
+			package cn.tedu.basic;
+			//测试 数组的创建
+			public class Test1_Array {
+				public static void main(String[] args) {
+					int[] a = new int[5];
+					System.out.println(a);//[I@15db9742
+					System.out.println(a.length);//获取数组长度
+					//把hello存入数组里
+					//char类型的默认值是\u0000
+					//静态初始化
+					char[] x = new char[]{'h','e','l','l','o'};
+					System.out.println(x);//hello
+					System.out.println(x.length);
+					
+					char[] y = {'h','e','l','l','o'};
+					System.out.println(y);//hello
+					System.out.println(y.length);
+					
+					//动态初始化
+					char z[] = new char[5];
+					z[0] = 'h';//修改z数组中,0下标对应的数据
+					z[1] = 'e';//修改z数组中,1下标对应的数据
+					z[2] = 'l';//修改z数组中,2下标对应的数据
+					z[3] = 'l';//修改z数组中,3下标对应的数据
+					z[4] = 'o';//修改z数组中,4下标对应的数据
+					System.out.println(z);//hello
+					
+			//访问了不存在的下标,就会报错:数组下标越界
+			//java.lang.ArrayIndexOutOfBoundsException: 5
+			//		System.out.println( z[5] );
+					
+					//TODO 遍历z数组
+					
+				}
+			}
+
+
+
+
+
+
+
+	--3,数组的遍历/循环		
+		--目的:就是根据下标,获取数组里的每个数据
+		--语法:
+			//for(开始位置;循环条件;更改条件){循环体}
+			for(从下标为0的位置开始;下标最大值<=数组长度-1;下标++){循环体}
+		--练习:
+			package cn.tedu.basic;
+
+			import java.util.Random;
+
+			//测试 数组的遍历
+			public class Test2_Array {
+				public static void main(String[] args) {
+			//		method();//遍历数组
+			//		method2();//输出每个月的天数
+					int[] x = method3();//定义数组,并存入随机数
+					method4(x);//打印随机数组里的奇数
+				}
+				//打印随机数组里的奇数
+				public static void method4(int[] a) {
+					System.out.println();
+					//遍历a数组里
+					for (int i = 0; i < a.length; i++) {
+						//过滤 -- 数组里的 奇数 数据 
+						if(a[i] % 2 == 1){
+							System.out.println(a[i]);
+						}
+					}
+				}
+				//定义数组,并存入随机数
+				public static int[] method3() {
+					//1,动态定义数组,存数据
+					int[] a = new int[5];
+					//2,遍历数组,获取每个数据
+					for (int i = 0; i < a.length; i++) {
+						//把默认值改成随机数
+						a[i] = new Random().nextInt(100);
+					}
+					//3,打印数据
+					for (int i = 0; i < a.length; i++) {
+						System.out.print(a[i]+",");
+					}
+					return a ;//把a返回给外界调用
+				}
+				//输出每个月的天数
+				public static void method2() {
+					//1,定义数组,存入12个整数
+					int[] a = {31,28,31,30,31,30,31,31,30,31,30,31};
+					//2,根据下标,遍历数组
+					for(int i = 0;i<=a.length-1;i++){
+						//根据下标i获取a数组里的元素
+			//			System.out.println( a[i] );
+			//			System.out.println("1月有31天");
+						System.out.println(i+1+"月有"+a[i]+"天");
+					}
+					
+				}
+				//遍历数组
+				public static void method() {
+					//1,静态创建数组
+			String[] a = {"杨幂","迪丽热巴","古力娜扎","Anglelababa","刘沛霞"};
+					//2,遍历数组
+					/*
+					 * int i = 0 从下标为0的位置开始循环
+					 * i < a.length 指下标的最大值是<长度
+					或者
+					 * i <= a.length-1
+					 * i++ 下标的变化规律,依次递增
+					 */
+					for(int i = 0;i <= a.length-1;i++){
+						//打印 a数组中i下标对应的元素
+						System.out.println( a[i] );
+					}
+				}
+			}
+
+二,数组工具类Arrays
+	--1,概述	
+		专门为数组,提供了各种常见的方法
+	--2,常用方法
+		toString(int[] a)
+		sort(int[] a)	
+		copyOf(int[] original, int newLength)
+	--3,测试
+		package cn.tedu.basic;
+
+		import java.util.Arrays;
+
+		//测试 数组工具类Arrays
+		public class Test3_Arrays {
+			public static void main(String[] args) {
+		//		method();//toString()
+		//		method2();//sort()
+				method3();//copyOf()
+			}
+			//copyOf
+			public static void method3() {
+				//1,准备源数组
+				int[] a = {1,2,3,4,5};
+				//2,调用方法完成复制
+				//copyOf(1,2)--1是原数组名2是新数组长度
+				int[] b = Arrays.copyOf(a, 8);
+				//扩容--是新数组的长度 > 原数组长度
+				//[1, 2, 3, 4, 5, 0, 0, 0]
+		System.out.println( Arrays.toString(b) );
+
+				int[] c = Arrays.copyOf(a, 2);
+				//缩容--是新数组的长度 < 原数组长度	
+				//[1, 2]
+		System.out.println( Arrays.toString(c) );
+				
+			}
+			//sort()--把无序进行排序
+			public static void method2() {
+				//1,定义数组
+				int a[]={95,77,99,81,1};
+				//2,使用工具类排序--从小到大
+				Arrays.sort(a);
+				//3,打印
+				System.out.println( Arrays.toString(a) );
+			}
+			//toString()--把数组里的数据变成字符串
+			public static void method() {
+				//1,定义数组
+				String a[] = {"1","2","3","4","5","6"};
+				//2,遍历数组并打印
+		//		for (int i = 0; i < a.length; i++) {
+		//			System.out.println(a[i]);
+		//		}
+				//TODO 使用工具类的方法,展示a数组里的数据
+				String s = Arrays.toString(a);
+				//[1, 2, 3, 4, 5, 6]
+				System.out.println(s);
+				
+				System.out.println(Arrays.toString(a));
+			}
+		}
+
+三,类的创建
+	--1,代码
+		package cn.tedu.basic;
+		//学生类,用来描述学生事物 -- 是抽象的
+		public class Student {
+			//变量.属性 -- 描述 特征
+			String name;//姓名 
+			int age;//年龄 
+			int id;//学号
+			//方法 -- 描述 功能
+			//学习 
+			public static void study(){
+				System.out.println("正在学习");
+			}
+			//吃饭 
+			public static void eat(){
+				System.out.println("正在吃饭");
+			}
+			//睡觉
+			public static void sleep(){
+				System.out.println("正在睡觉");
+			}
+			
+		}
+
+预习 -- 四,类的使用
+
+扩展:
+	--1,数组的练习
+		--统计数组中偶数的个数
+		--统计数组中奇数的和
+		--获取数组里的最大值最小值
+		
+		
+	--2,实参和形参的区别
+		实参是调用方法时,具体要设置的值
+		形参是创建方法时,规定的参数的类型
+		public static void add2(String x)//参数x是形参
+		add2("tony");//参数tony是实参
+		

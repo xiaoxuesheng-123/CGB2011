@@ -1,0 +1,69 @@
+一，开发的方式
+	--1，使用记事本：写的慢，老出错
+	--2，使用工具：
+		--MyEclipse：收费的
+		--Eclipse：免费的
+		--Idea：免费的 + 收费的
+	--3，Eclipse
+		--严格的目录结构
+		--workspace工作空间：指定代码的存放位置
+		--project工程、项目
+			右键-new-java project-输入名称-finish
+			
+		--package包：里面存放对应的代码
+			选中src-右键-new-package-输入包名-finish
+			
+		--class类：是java开发的最小单位
+			选中包-右键-new-class-输入类名-finish
+二，说明
+	// 单行注释
+	/* 多行注释 */
+	//第一行整体用来： 定义一个包
+	/*
+	 * package java里的关键字，专门用来定义包
+	 * cn.tedu.basic 包名 -- 全小写 + 公司的域名倒着写
+	 * ; -- java语句的结束符
+	 */
+	package cn.tedu.basic;
+	//整体用来 定义一个类
+	/*
+	 * public  java里的关键字,用来修饰类的访问权限，是公共的
+	 * class   java里的关键字,专门用来定义类
+	 * HelloWorld 类名 -- 驼峰命名法
+	 * { java代码 }
+	 */
+	public class HelloWorld {
+		/*
+		 * 第三行用来 定义一个主方法、主函数--是程序的入口
+		 * public java里的关键字,用来修饰主方法的访问权限
+		 * static java里的关键字,用来修饰主方法是 静态的
+		 * void java里的关键字,用来修饰主方法是 没有返回值的
+		 * main 方法名
+		 * () 看做是方法的标记
+		 * String[] args 是方法的参数
+		 * { java代码、方法体  }
+		 */
+		public static void main(String[] args) {
+			/*第四行用来 指定要输出的数据
+			 * System 发出一个系统指令
+			 * . 调用关系
+			 * out 发出一个输出的动作
+			 * println 打印后换行
+			 * () 方法的标志
+			 * 12345 方法的参数 --要输出的数据
+			 * ; java语句的结束符
+			 * ctrl f11 用来测试
+			 */
+			System.out.print(12345);//同一行展示
+			System.out.println();//换行符
+			System.out.println();
+			System.out.println();
+			System.out.println();
+			System.out.println(12345);//换行展示
+		}
+
+	}
+
+三，
+
+--			

@@ -1,0 +1,26 @@
+下载资料的网址：
+	http://code.tarena.com.cn
+	用户名：tarenacode
+	密码：code_2017
+	
+	刘沛霞  皮皮霞 2250432165
+	
+一,jdk
+	--1,概述
+		是Java开发的核心，包含了Java开发的环境（JVM），还有开发的工具。
+		对你来说就是一个软件，有各种版本，用稳定版8.0
+	--2,使用
+		--下载（找资源--jdk的下载）
+		--安装（下一步）
+		--配置环境变量：通知操作系统jdk的安装位置
+			--JAVA_HOME：指定jdk的安装位置
+				此电脑-右键-属性-高级系统设置-环境变量-新建-变量名是固定的JAVA_HOME-变量值是jdk的安装位置
+				
+			--Path：找到jdk里的工具
+				选中Path-编辑-添加一条记录（固定写法）
+				-%JAVA_HOME%\bin
+		--检查：
+			C:\Users\ACC-MZY>java -version
+			java version "1.8.0_241"
+			Java(TM) SE Runtime Environment (build 1.8.0_241-b07)
+			Java HotSpot(TM) 64-Bit Server VM (build 25.241-b07, mixed mode)

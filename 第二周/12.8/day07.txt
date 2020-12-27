@@ -1,0 +1,325 @@
+一,数组的练习
+	--1,代码
+		package cn.tedu.basic;
+
+		import java.util.Arrays;
+
+		//数组练习
+		public class Test1_Array {
+			public static void main(String[] args) {
+		//		method();//统计数组中偶数的个数
+		//		method2();//统计数组中奇数的和
+				method3();//获取数组里的最大值最小值
+			}
+			//获取数组里的最大值最小值
+			public static void method3() {
+				//1,定义数组
+				int[] a = {93,56,46,99,53};
+				//2,遍历获取每个数据
+				int max = a[0];//假设 a[0]就是最大值
+				int min = a[0];//假设 a[0]就是最小值
+				for (int i = 0; i < a.length; i++) {
+					//判断,如果遇到的数比max大,就改max的值
+					if(a[i] > max){
+						max = a[i] ;
+					}
+					//判断,如果遇到的数比min小,就改min的值
+					if(a[i] < min){
+						min = a[i];
+					}
+				}
+				System.out.println(max);
+				System.out.println(min);
+			}
+			//统计数组中奇数的和
+			public static void method2() {
+				//1,定义数组
+				int[] a = {93,56,46,61,53};
+				//2,遍历获取每个数据
+				int sum = 0 ;//定义变量,记录和
+				for (int i = 0; i < a.length; i++) {
+					//3,判断是不是奇数
+					if(a[i] % 2 == 1){
+						//4,如果是奇数求和
+						sum = sum + a[i] ;
+					}
+				}
+				System.out.println(sum);
+			}
+			//统计数组中偶数的个数
+			public static void method() {
+				//1,定义数组
+				int[] a = {93,56,46,66,53};
+				//2,遍历获取每个数据
+				int oushu = 0;//定义变量,记录偶数的个数
+				for (int i = 0; i < a.length; i++) {
+					//3,判断是不是偶数
+					if(a[i] % 2 == 0){
+						//4,如果是偶数++
+						oushu++ ;
+					}
+				}
+				System.out.println(oushu);
+			}
+		}
+
+二,类和对象的创建和使用
+	--1,创建Car类
+		package cn.tedu.basic;
+		//创建汽车类 用来描述 汽车事物
+		public class Car {
+			//特征 -- 成员变量/成员属性
+			String pinpai;
+			String color;
+			double price;
+			
+			//功能 -- 方法
+			public void run(){
+				System.out.println("前进");
+			}
+			public void back(){
+				System.out.println("后退");
+			}
+		}
+
+	--2,创建测试类
+		package cn.tedu.basic;
+		//使用汽车类 作为模板
+		public class Test2_Car {
+			public static void main(String[] args) {
+				//1,使用模板Car
+				//通过new关键字 创建汽车对象
+				new Car();//匿名对象
+				//c是引用类型的变量,默认值是null.
+				//但是现在存的是一个地址值
+				Car c = new Car();
+				//c调用模板里的方法
+				c.run();
+				c.back();
+				
+				//c调用模板里的变量
+				c.pinpai="LSLS";//设置值
+				//获取值 null -> LSLS
+				System.out.println(c.pinpai);
+				//TODO 
+				c.color="white";
+				c.price= 9.9;
+				System.out.println(c.color);
+				System.out.println(c.price);
+				
+				//TODO 
+				//根据Car模板,再创建c2对象
+				Car c2 = new Car();
+				c2.pinpai="BMW";
+				c2.color="red";
+				c2.price=9.8;
+				System.out.println(c2.pinpai);
+				System.out.println(c2.color);
+				System.out.println(c2.price);
+				
+			}
+		}
+三,封装
+	--1,概述
+		使用private关键字.用来提高程序的安全性.被private之后,只能在 本类 中访问.
+	--2,测试
+		package cn.tedu.basic;
+		//测试 封装
+		//一个.java文件里可以有两个类,但是,只能有一个类被public修饰
+		//而且,public的类的名字必须和.java文件名一致
+
+		//总结
+		//1,把你想要隐藏的信息 加一个private修饰
+		//2,private后的资源,只能在本类中访问,,可以提供公共的方法
+		//3,调用set()设置值,调用get()获取值
+
+		public class Test3_Private {
+			public static void main(String[] args) {
+				//TODO 创建Student对象 测试
+				Student s = new Student();
+		//		s.eat();//2,被private了,没法直接调用了
+				s.sleep();
+				
+		//		s.id=100 ;//设置属性值
+				s.setId(90);
+		//		System.out.println(s.id);//获取属性值
+				System.out.println( s.getId() );//90 
+		//		s.name="tony" ;
+				s.setName("jack");
+		//		System.out.println(s.name);
+				System.out.println(s.getName());
+		//		s.sex='男' ;
+				s.setSex('女');
+		//		System.out.println(s.sex);
+				System.out.println(s.getSex());
+			}
+		}
+		class Student{
+			private String name;
+			private char sex;
+			//7,使用eclipse自动提供set() get()
+		//右键-source-generate getters and setters-select all-ok
+			public String getName() {
+				return name;
+			}
+			public void setName(String name) {
+				this.name = name;
+			}
+			public char getSex() {
+				return sex;
+			}
+			public void setSex(char sex) {
+				this.sex = sex;
+			}
+		//4,通过private实现封装属性
+			private int id;
+		//6,提供公共的 getXxx()-获取id属性的值
+			public int getId(){
+				return id;//把id属性的值返回给外界
+			}
+		//5,提供公共的 setXxx()-设置id属性的值
+			public void setId(int a){
+				id = a ;
+			}
+			
+			//1,通过private实现封装,private之后只能在本类中可见
+			private void eat(){
+				System.out.println("干饭人");
+			}
+			
+			public void sleep(){
+				eat();//3,间接的提供eat()
+				System.out.println("睡觉");
+			}
+		}
+
+
+四,构造方法
+	--1,概述
+		专门用来 创建对象 和完成对象的初始化
+		是一个特殊的方法,不需要你调用,方法名和		类名相同
+	--2,语法
+		修饰符 类名([参数列表]){方法体} 
+	--3,测试
+		package cn.tedu.basic;
+		//测试  构造方法Constructor
+		//总结
+		//1,构造方法的作用: 用来创建对象
+		//2,触发节点: new/实例化 时
+		//3,默认就存在一个 无参构造...
+		//4,可以给变量赋值
+		//5,构造方法可以提供多个,方便外界new
+		public class Test4_Constructor {
+			public static void main(String[] args) {
+				//TODO 创建Person对象 测试
+				new Person();//触发无参构造
+				//TODO 触发含参构造
+				new Person(10);
+				new Person("jack");
+				new Person("jack",10);
+			}
+		}
+		//提供构造方法:修饰符 类名([参数列表]){方法体}
+		//TODO 构造方法的触发时间节点--创建对象时
+		class Person{
+			private int age;
+			//获取值的方式:set()/constructor
+			//TODO 1,无参构造默认就存在,是隐藏的
+			//TODO 2,只提供含参构造时,,无参构造就没有了!!!
+			public Person(){
+				System.out.println("无参构造");
+			}
+		//TODO 3,构造方法也可以重载--方法名一样参数列表不同
+			public Person(int a){
+				age = a;
+				System.out.println("含参构造"+a);
+			}
+			public Person(String a){
+				System.out.println("含参构造"+a);
+			}
+			public Person(String a,int b){
+				System.out.println("含参构造"+a+b);
+			}
+			
+		}
+
+五,构造代码块
+	--1,代码块
+		一段被 花括号 包起来的代码
+		出现的位置不同,名字作用用法都不同
+		出现在成员位置(类里方法外)的,,叫 构造代码块
+		出现在局部位置(方法里)的,,叫 局部代码块
+	--2,构造代码块
+		在类的内部，方法外部，的代码块。
+		通常用于抽取构造方法中的共性代码。
+		每次调用构造方法前都会调用构造代码块
+		优先于构造方法加载
+	--3,局部代码块
+		在方法里面的代码块
+		通常用于控制变量的作用范围，出了括号就失效
+	--4,测试
+		package cn.tedu.basic;
+		//测试 代码块
+		public class Test5_Block {
+			public static void main(String[] args) {
+				//2,先执行构造代码块然后执行构造方法
+				new Demo().show();
+				//匿名对象,用的少.因为一次只执行一个任务
+				
+				//有名字的对象d,可以执行很多任务
+				Demo d = new Demo();
+				d.show();
+				d.show();
+				d.show();
+				d.show();
+				d.show();
+				d.show();
+				d.show();
+			}
+		}
+		class Demo{
+		//1,构造代码块:在成员位置+触发节点是new时
+					 //用来提取构造方法的共性
+			{
+				int age = 0;//提高了复用性
+				System.out.println("构造 代码块");
+			}
+			//TODO Constructor..
+			public Demo(){
+		//		int age = 0;
+				System.out.println("无参 构造方法");
+			}
+			public Demo(int a){
+		//		int age = 0;
+				System.out.println("构造方法");
+			}
+			public Demo(String a){
+		//		int age = 0;
+				System.out.println("构造方法");
+			}
+			public Demo(int a,int b){
+		//		int age = 0;
+				System.out.println("构造方法");
+			}
+			
+		//2,局部代码块:在方法里+触发节点是调用方法时+用来控制变量的范围
+			public void show(){
+				{
+					int x = 10;
+					System.out.println(x);
+					System.out.println("局部代码块");
+				}
+		//		System.out.println(x);
+			}
+		}
+
+
+
+
+
+
+
+
+	
+
+

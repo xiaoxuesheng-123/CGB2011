@@ -1,0 +1,240 @@
+一,IDEA使用
+	--1,入门案例
+		package cn.tedu.api;
+
+		//测试 入门案例
+		public class HelloWorld {
+		    //main psvm
+		    public static void main(String[] args) {
+		        //sout
+		        System.out.println(123);
+		        //复制一行 ctrl d
+		        //删除一行 ctrl x
+		        System.out.println(123);
+		        System.out.println(123);
+		        System.out.println(123);
+		        System.out.println(123);
+
+		        //调整位置 ctrl shift 箭头
+		        //格式化代码  ctrl alt l
+
+		        //注释 ctrl  /
+		//        for (int i = 0; i < 10 ; i++) {}
+
+		    }
+		}
+
+二,Object
+	--1,概述	
+		类 Object 是类层次结构的根类。每个类都使用 Object 作为超类。 
+	--2,创建对象
+		Object() 
+	--3,常用方法
+		String toString() 
+          返回该对象的字符串表示。 
+		int hashCode() 
+          返回该对象的哈希码值。 
+		boolean equals(Object obj) 
+          指示其他某个对象是否与此对象“相等”。 
+	--4,测试
+		package cn.tedu.api;
+		//测试 Object工具类
+		public class Test1_Object {
+		    public static void main(String[] args) {
+		        //1,创建对象
+		        Object o = new Object();
+		        //底层会自动调用o.toString()
+		        // java.lang.Object@1b6d3586
+		        System.out.println(o);
+		        //2,调用方法
+		        String s = o.toString();
+		        //返回o对象在内存中的地址值
+		        //java.lang.Object@1b6d3586
+		        System.out.println(s);
+
+		        int i = o.hashCode();
+		        //o对象在内存中的哈希码值
+		        System.out.println(i);//460141958
+
+		 //参数Object体现了灵活性,通用性--多态
+		//        boolean equals(Object obj)
+		        boolean b = o.equals("123");
+		        //比较o和"123"是否相等
+		        System.out.println(b);//false
+		    }
+		}
+
+	--5,复杂测试
+		--代码	
+			package cn.tedu.api;
+
+			import java.util.Objects;
+
+			//测试 重写 Object里的方法
+			//总结
+			//1,重写toString():
+			    //默认使用了父类的,就是展示地址值.想展示属性值
+			//2,重写equals():
+			    //默认使用了父类的,就是==比较地址值,想比较属性值
+			//3,IDEA自动生成代码:右键-generate....
+			//Eclipse自动生成代码:右键-source-generate........
+			public class Test2_Object {
+			    public static void main(String[] args) {
+			        //创建Student对象
+			        Student s = new Student("tony",100);
+			        String s1 = s.toString();
+			        //1,默认就是使用了父类Object的toString(),
+			//重写toString()前,展示地址值cn.tedu.api.Student@1b6d3586
+			//重写toString()后,展示属性值Student{name='tony', age=100}
+			        System.out.println(s1);
+
+			        Student s2 = new Student("蔡徐坤",18);
+			        Student s3 = new Student("蔡徐坤",18);
+			        boolean b = s2.equals(s3) ;
+			        //3,equals():比较两个对象是否相等
+			        //默认用了父类Object提供的,使用==比较
+			        //==比较基本类型的 值本身,比较引用类型的 地址值
+			        //重写equals()前,比的是地址值
+			        //重写equals()后,比较属性值
+			        System.out.println(b);
+			    }
+			}
+			class Student extends Object{
+			//4,重写equals()::默认比较的是地址值,想比属性值
+			    @Override
+			    public boolean equals(Object o) {
+			        if (this == o) return true;
+			        if (o == null || getClass() != o.getClass()) return false;
+			        //把参数obj转型,转成Student类型
+			        Student student = (Student) o;
+			        //拿着属性比较,如果属性都一样,就让equals()返回true
+			        return age == student.age &&
+			                Objects.equals(name, student.name);
+			    }
+
+			    @Override
+			    public int hashCode() {
+			        return Objects.hash(name, age);
+			    }
+
+			    //2,重写的toString()::不想展示地址值，想展示属性值
+			//generate-toString()-ok
+			    @Override
+			    public String toString() {
+			        return "Student{" +
+			                "name='" + name + '\'' +
+			                ", age=" + age +
+			                '}';
+			    }
+
+			    //TODO Constructors..
+			    public Student(){}
+			    public Student(String name, int age) {
+			        this.name = name;
+			        this.age = age;
+			    }
+			    //TODO fields
+			    private String name;
+			    private int age;
+			    //TODO get/set--右键-generate-getter and setter-ok
+			    public String getName() {
+			        return name;
+			    }
+			    public void setName(String name) {
+			        this.name = name;
+			    }
+			    public int getAge() {
+			        return age;
+			    }
+			    public void setAge(int age) {
+			        this.age = age;
+			    }
+			}
+	
+三,String
+	--1,概述
+		String 类代表字符串。Java 程序中的所		有字符串字面值（如 "abc" ）都作为此			类的实例实现。 
+		字符串是常量；它们的值在创建之后不能		更改。
+	--2,特点
+		--源码摘抄:
+			public final class String不能被继承
+			private final char value[];String本质				上维护了一个char[] 叫value,用来存储多				个字符数据.而且String是一个常量,值不能			被修改
+	--3,创建对象
+		String() 
+		String(char[] value) 
+	--4,调用方法
+		char charAt(int index) 
+          返回指定索引处的 char 值。 
+		String concat(String str) 
+		          将指定字符串连接到此字符串的结尾。 
+		boolean contains(CharSequence s) 
+		          当且仅当此字符串包含指定的 char 值序列时，返回 true。 
+			boolean endsWith(String suffix) 
+		          测试此字符串是否以指定的后缀结束。 	
+		 boolean equals(Object anObject) 
+		          将此字符串与指定的对象比较。 
+		byte[] getBytes()  
+      int hashCode()
+    int indexOf(String str)
+    boolean isEmpty()
+    int lastIndexOf(String str)
+    int length()
+    String replace(char oldChar, char newChar)
+    boolean startsWith(String prefix)
+    String substring(int beginIndex)
+    String substring(int beginIndex, int endIndex)
+    String toLowerCase()
+    String toString()
+    String toUpperCase()
+    String trim()
+
+    static String valueOf(int i)
+    char[] toCharArray()
+    String[] split(String regex)
+    byte[] getBytes()
+	--5,测试
+		package cn.tedu.api;
+		//测试 字符串
+		public class Test3_String {
+		    public static void main(String[] args) {
+		        //1,创建String对象
+		        String s = new String();
+		        //TODO 特点:String底层是一个char[]
+		//      String(char[] value)
+		        char[] value = {'h','e','l','l','o'};
+		        String s2 = new String(value);
+		        //2,调用方法
+		        System.out.println( s2.charAt(2) );//获取下标2对应的字符
+		        System.out.println( s2.concat("123") );//在s2后面拼接"123"
+		        System.out.println( s2.contains("xyz") );//判断s2包含"xyz"吗
+		        System.out.println( s2.endsWith("llo") );//判断s2是否以"llo"结尾
+		        System.out.println( s2.equals("hello") );//判断s2是否与?相等
+
+		        //TODO 测试其他方法
+		//        int hashCode()
+		//        int indexOf(String str)
+		//        boolean isEmpty()
+		//        int lastIndexOf(String str)
+		//        int length()
+		//        String replace(char oldChar, char newChar)
+		//        boolean startsWith(String prefix)
+		//        String substring(int beginIndex)
+		//        String substring(int beginIndex, int endIndex)
+		//        String toLowerCase()
+		//        String toString()
+		//        String toUpperCase()
+		//        String trim()
+
+		//        static String valueOf(int i)
+		//        char[] toCharArray()
+		//        String[] split(String regex)
+		//        byte[] getBytes()
+
+		    }
+		}
+
+
+          
+扩展:
+	--复习方法的使用
+	--复习OOP

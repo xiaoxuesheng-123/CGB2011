@@ -1,0 +1,283 @@
+一,售票案例
+	--1,继承Thread类
+		package cn.tedu.util;
+		//模拟多线程售票 --继承Thread类
+		public class Test1_Thread {
+		    public static void main(String[] args) {
+		        //创建4个线程,模拟4个窗口
+		        MyTickets t1 = new MyTickets();
+		        MyTickets t2 = new MyTickets();
+		        MyTickets t3 = new MyTickets();
+		        MyTickets t4 = new MyTickets();
+		        //启动线程
+		        t1.start();
+		        t2.start();
+		        t3.start();
+		        t4.start();
+		    }
+		}
+		//设计4个售票窗口,总计售票100张
+		class MyTickets extends Thread{
+		//问题1::票数总共卖了400张 ???
+		//原因::tickets是一个成员变量,每次new都需要初始化一份,
+		//总共4次,内存中总共4份,就变成了400张票
+		//    int tickets = 100;//定义变量,记录票数
+		//解决::让tickets在程序中只加载一次,被共享 -- static
+		    static int tickets = 100;//定义变量,记录票数
+		    //重写的run()-右键-generate-override methods()
+		    @Override
+		    public void run() {
+		        //循环 开始卖票,其实就是把票数--
+		        while(true){//死循环,因为条件永远成立
+		            if(tickets > 0){
+		                //问题2: 重卖:同一张票,卖给了好几个人
+		                //问题3: 超卖:卖出去了 0 -1 -2号票
+		                try {
+		                    Thread.sleep(10);
+		                } catch (InterruptedException e) {
+		                    e.printStackTrace();
+		                }
+		                System.out.println(super.getName()+"~~"+tickets--);
+		            }else{
+		                break;//是死循环的出口!!
+		            }
+		        }
+		    }
+		}
+
+	--2,实现Runnable接口
+		package cn.tedu.util;
+		//模拟多线程售票 --实现Runnable接口
+		public class Test2_Thread {
+		    public static void main(String[] args) {
+		        MyTickets2 target = new MyTickets2();
+		        Thread t1 = new Thread(target);
+		        Thread t2 = new Thread(target);
+		        Thread t3 = new Thread(target);
+		        Thread t4 = new Thread(target);
+		        t1.start();
+		        t2.start();
+		        t3.start();
+		        t4.start();
+		    }
+		}
+		//设计4个售票窗口,总计售票100张
+		class MyTickets2 implements Runnable{
+		    int tickets = 100;//定义变量,记录票数
+		    @Override
+		    public void run() {
+		        while(true){
+		            if(tickets>0){
+		                //问题1:: 重卖:同一张票,卖给了好几个人
+		                //问题2:: 超卖:卖出去了 0 -1 -2号票
+		                try {
+		                    Thread.sleep(10);
+		                } catch (InterruptedException e) {
+		                    e.printStackTrace();
+		                }
+		        //重卖的原因:
+		        //假设 tickets=95,t1 t2 t3 t4 都准备卖票
+		        //tickets=95,假设t1先醒开始卖票,执行tickets--,输出95, 还没来的及 自减变成94
+		        //假设t2醒了,还是拿着tickets=95,执行tickets--,输出95,还没来的及 自减变成94
+		        //假设t4醒了,还是拿着tickets=95,执行tickets--,输出95,刚好改完了,自减变成94
+		        //假设t3醒了,tickets=94,执行tickets--,输出94...
+		        //超卖的原因:
+		        //假设 tickets=1,t1 t2 t3 t4 都准备卖票
+		        //假设t1先醒开始卖票,tickets=1,执行tickets--,输出1,变了,自减变成0
+		        //假设t2醒了,tickets=0,执行tickets--,输出0,变了,自减变成-1
+		        //假设t4醒了,tickets=-1,执行tickets--,输出-1,变了,自减变成-2
+		        //假设t3醒了,tickets=-2,执行tickets--,输出-2,变了,自减变成-3
+		                System.out.println(Thread.currentThread().getName()+"==="+tickets--);
+		            }else{
+		                break;
+		            }
+		        }
+		    }
+		}
+
+二,同步锁
+	--1,概述
+		用来解决多线程并发时,造成的数据安全隐患
+		同步: 就是指排队等待的现象
+		锁: 把 操作共享资源的代码 锁 起来
+	--2,用法
+		--方法上
+			synchronized public void add(){....}
+		--代码块上
+			synchronized(锁对象){ 有问题的代码 }
+	--3,改造implements Runnable
+		package cn.tedu.util;
+		//模拟多线程售票 --实现Runnable接口
+		public class Test2_Thread {
+		    public static void main(String[] args) {
+		        MyTickets2 target = new MyTickets2();
+		        Thread t1 = new Thread(target);
+		        Thread t2 = new Thread(target);
+		        Thread t3 = new Thread(target);
+		        Thread t4 = new Thread(target);
+		        t1.start();
+		        t2.start();
+		        t3.start();
+		        t4.start();
+		    }
+		}
+		class MyTickets2 implements Runnable{
+		    int tickets = 100;//定义变量,记录票数
+		    Object o = new Object();
+		    @Override
+		//TODO 1,给方法加锁,让多线程 排队等待的效果,实现了数据的安全但是牺牲了效率
+		//synchronized public void run() {
+		    public void run() {
+		//TODO 2,给代码块加锁,要考虑两个问题:锁的位置+锁对象是啥
+		//同步代码块的锁对象 可以任意,但是必须是同一个对象!!!
+		        while(true){
+		//            synchronized (new Object()){//不是同一个对象
+		//            synchronized (o){//只有一个对象
+		//            synchronized ("123"){//只有一个对象
+		            synchronized (this){
+		                if(tickets>0){
+		                    try {
+		                        Thread.sleep(10);
+		                    } catch (InterruptedException e) {
+		                        e.printStackTrace();
+		                    }
+		                    System.out.println(Thread.currentThread().getName()+"==="+tickets--);
+		                }else{
+		                    break;
+		                }
+		            }
+		        }
+		    }
+		}
+	--4,改造extends Thread
+		package cn.tedu.util;
+		//模拟多线程售票 --继承Thread类
+		public class Test1_Thread {
+		    public static void main(String[] args) {
+		        //创建4个线程,模拟4个窗口
+		        MyTickets t1 = new MyTickets();
+		        MyTickets t2 = new MyTickets();
+		        MyTickets t3 = new MyTickets();
+		        MyTickets t4 = new MyTickets();
+		        //启动线程
+		        t1.start();
+		        t2.start();
+		        t3.start();
+		        t4.start();
+		    }
+		}
+		class MyTickets extends Thread{
+		//TODO 如果共享资源是静态的,锁对象必须固定--类名.class
+		    static int tickets = 100;
+		    @Override
+		//TODO 2,同步方法,会自动分配锁对象,不需要你考虑
+		//普通方法默认分配this,静态方法默认分配类名.class
+		// synchronized public void run() {//没锁住
+		    public void run() {
+		        while(true){
+		//TODO 1,同步代码块:
+		// synchronized (this){因为共享资源是静态的this锁不住
+		            synchronized (MyTickets.class){
+		                if(tickets > 0){
+		                    try {
+		                        Thread.sleep(10);
+		                    } catch (InterruptedException e) {
+		                        e.printStackTrace();
+		                    }
+		                    System.out.println(super.getName()+"~~"+tickets--);
+		                }else{
+		                    break;//是死循环的出口!!
+		                }
+
+		            }
+		        }
+		    }
+		}
+三,设计模式
+	--1,概述
+		是一套经验总结的模式.
+		java里有23种设计模式,在框架里用到了大量			的设计模式
+	--2,单例模式(Singleton)
+		--保证一个类仅有一个实例
+	--3,自己实现单例模式
+		package cn.tedu.util;
+		//测试 单例设计模式
+		public class Test3_Singleton {
+		    public static void main(String[] args) {
+		        //TODO 现在是多例
+		//        new Student();
+		//        new Student();
+		//        new Student();
+		        //TODO 实现单例
+		        Student s = Student.get();
+		        Student s2 = Student.get();
+		        //是同一个对象吗?--地址值相同就是同一个对象
+		//eqals():如果使用Object的就是比地址值,如果重写了比属性值
+		        //== :比基本类型的数值本身,比引用类型的地址值
+		        System.out.println( s == s2);//true
+
+		        Student2 s3 = Student2.get();
+		        Student2 s4 = Student2.get();
+		        System.out.println( s3 == s4);
+		    }
+		}
+		//懒汉式--面试常见--按需加载/延迟加载--线程安全
+		class Student2{
+		    private Student2(){}
+		    static private Student2 s;//没有第一时间new
+		    //TODO 共享资源s被多条语句操作了,一定会不安全,需要加锁
+		    synchronized static public Student2 get(){
+		//        synchronized (Student2.class){
+		            //没new过才new呢,new过了就算了
+		            if(s == null){
+		                s = new Student2();//需要时才new
+		            }
+		            return s;//把new好的返回
+		//        }
+		    }
+		}
+		//饿汉式--自己用
+		//TODO 多线程编程中,有数据安全隐患吗 ?
+		// 当共享资源 被多条语句操作时,一定会有问题,选择加锁!!
+		class Student{
+		    //1,私有化构造方法,不让外界随便new
+		    private Student(){}
+		    //2,自己 给外界new一个
+		//加static:被静态资源get()调用的资源s,也必须得是静态的
+		    static private Student s = new Student();
+		    //TODO 3,提供方法,并返回s方便外界调用
+		//加static:不能用对象调用这个方法了,只能变成静态的,通过类名调用
+		    static public Student get(){
+		        return s;
+		    }
+		}
+四,注解
+	--1,概述
+		英文名称Annotation,标志是@
+		注解可以简化开发,甚至能够代替一些代码
+	--2,分类
+		jdk提供的:5个,常用的只有@Override
+		元注解:5个,常用的是@Target @Retention
+	--3,@Target
+		--用来描述自定义的注解可以出现在哪个位置
+		--值被维护在了ElementType工具类里
+		--类上TYPE,方法上Method,属性上Field..
+	--4,@Retention
+		--用来描述自定义注解的生命周期
+		--值被维护在了RetentionPolicy工具类里
+		--只在编译期有效SOURCE,字节码时期有效					CLASS,运行时还有效RUNTIME
+
+预习--5,自定义注解
+
+扩展
+	--0,找项目经理安装MySQL数据库,周五用..
+	--1,面试题:
+		--同步和异步的区别
+			--同步:排队等待的现象,有钥匙的人才能操						 作共享资源,没钥匙的只能等.
+						 牺牲了效率 , 提高了安全性
+			--异步:不排队,不用等待上一个结果.
+						 牺牲了安全性 , 提高了效率
+	--2,了解其他的锁机制
+		读写锁,可重入锁,悲观锁,乐观锁
+	--3,了解线程池	
+	--4,手写单例设计模式

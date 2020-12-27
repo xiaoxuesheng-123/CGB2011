@@ -1,0 +1,344 @@
+一,注解
+	--1,@Target
+		--用来描述自定义的注解可以出现在哪个位置
+		--值被维护在了ElementType工具类里
+		--类上TYPE,方法上Method,属性上Field..
+	--2,@Retention
+		--用来描述自定义注解的生命周期
+		--值被维护在了RetentionPolicy工具类里
+		--只在编译期有效SOURCE,字节码时期有效					CLASS,运行时还有效RUNTIME
+	--3,自定义注解
+		package cn.tedu.annotation;
+
+		import java.lang.annotation.ElementType;
+		import java.lang.annotation.Retention;
+		import java.lang.annotation.RetentionPolicy;
+		import java.lang.annotation.Target;
+
+		//测试 自定义注解 ::
+		//Constructor构造方法
+		//Field属性/变量
+		//Method方法
+		//Type类/类型
+		//Annotation注解
+		public class Test1 {
+		    public static void main(String[] args) {
+
+		    }
+		}
+		//第一步:自定义一个注解--jdk/框架提供的
+		//语法:@interface 注解名
+		//元注解,用来描述注解的生命周期
+		@Retention(RetentionPolicy.SOURCE)
+		//元注解,用来描述注解的出现的位置--出现在类上
+		//@Target(ElementType.TYPE)
+		@Target({ElementType.TYPE , ElementType.FIELD})
+		@interface Test{
+		//    String name() ;//加属性,谁用
+		    String name() default "jack";//给属性加默认值
+		    int age() default 10;
+		    String value();//特殊的属性--特殊在用时直接赋值
+		}
+		//第二步:使用注解--必会
+		//语法:@注解名
+		@Test("abc")//简写value="abc"
+		//@Test(name="tony",age=20)//都改掉
+		//@Test(age=18)//给age属性赋值
+		//@Test(name="Hello")//给name属性赋值
+		class Hello{
+		}
+
+二,反射
+	--1,概述
+		是底层使用的一个技术,用来解析.class文			件里的所有数据,包括公开的私有的
+			变量--设置,获取
+			方法--执行
+			构造方法--创建对象
+	--2,Class工具类
+		--用来封装.class文件里的所有数据
+		--创建对象
+			--没有提供构造方法,不能直接new
+			--三种方式
+				Class.forName("类名")
+				类名.class
+				对象.getClass()
+		--调用方法
+			参考网页版笔记
+		--测试
+			package cn.tedu.reflect;
+			//测试 反射
+			public class Test2 {
+			    public static void main(String[] args)
+			                throws ClassNotFoundException {
+			        method();//获取Class对象
+			    }
+			    //获取Class对象 -- 解析String.class
+			    private static void method()
+			                throws ClassNotFoundException {
+			        //三种方式:
+			//        类名.class
+			//        对象.getClass()
+			//        Class.forName("全路径名")--包名.类名
+			        Class c1 = String.class;
+			        Class c2 = new String().getClass();
+			        Class c3 = Class.forName("java.lang.String");
+			        System.out.println(c1);
+			        System.out.println(c2);
+			        System.out.println(c3);
+			        //TODO 解析String.class 里的所有方法
+			    }
+
+			}
+	
+	--3,使用反射
+		--创建Student类
+			package cn.tedu.reflect;
+			//测试 反射
+			public class Student {
+			    //TODO Constructors
+			    public Student() { }
+			    public Student(String name) {
+			        this.name = name;
+			    }
+			    public Student(String name, int age) {
+			        this.name = name;
+			        this.age = age;
+			    }
+			    //TODO Fields --加public方便反射
+			    public String name;
+			    public int age;
+			    //TODO Methods
+			    public void show(int a){
+			        System.out.println("show()-"+a);
+			    }
+			}
+
+		--测试
+			package cn.tedu.reflect;
+
+			import java.lang.reflect.Constructor;
+			import java.lang.reflect.Field;
+			import java.lang.reflect.Method;
+			import java.util.Arrays;
+
+			//反射Student类里的数据
+			public class Test3_Student {
+			    public static void main(String[] args) throws Exception {
+			        //1,获取Class对象
+			        Class c1 = Student.class;
+			//        method(c1);//反射方法们
+			//        method2(c1);//反射成员变量们
+			//        method3(c1);//反射构造方法们
+			//        method4(c1);//利用反射创建对象
+			//        method5(c1);//利用反射给成员变量set/get
+			        method6(c1);//利用反射运行方法
+			    }
+			    //利用反射运行方法
+			    private static void method6(Class c1) throws Exception {
+			 //获取一个方法 public void show(int a)
+			 //getMethod(1,2)-1是方法名,2是参数类型的class对象
+			        Method m = c1.getMethod("show",int.class);
+			        //让反射执行方法
+			        Object oo = c1.newInstance();
+			        //invoke(1,2)-1是对象,2是方法具体要传入的参数
+			        m.invoke(oo,10000);
+			    }
+			    //利用反射给成员变量set/get
+			    private static void method5(Class c1) throws Exception {
+			        //获取一个成员变量
+			        Field f = c1.getField("age");
+			        //set(1,2)--1是对象,2给属性赋的具体值
+			        Object o = c1.newInstance();
+			        f.set(o,1000);//设置属性的值
+
+			        Object x = f.get(o);//设置属性的值
+			        System.out.println(x);//1000?
+			    }
+			    //利用反射创建对象
+			    private static void method4(Class c1) throws Exception {
+			        //利用反射 触发 无参构造 创建对象
+			        Object s = c1.newInstance();
+			        System.out.println(s);
+			        //利用反射 触发 含参构造 创建对象
+			        //public Student(String name)
+			        //getConstructor的参数 是String类型的Class对象
+			        Constructor c = c1.getConstructor(String.class);
+			        //newInstance的参数 是给构造方法传入的具体的参数
+			        Object o = c.newInstance("jack");
+			        System.out.println(o);
+			    }
+			    //反射构造方法们
+			    private static void method3(Class c1) {
+			        //获取所有的 公开的 构造方法们
+			        Constructor[] cs = c1.getConstructors();
+			        //遍历数组,获取每个构造方法c
+			        for (Constructor c : cs) {
+			            //获取构造方法的名字
+			            System.out.println(c.getName());
+			            //获取参数的类型
+			            Class[] cs2 = c.getParameterTypes();
+			            System.out.println(Arrays.toString(cs2));
+			        }
+			    }
+			    //反射成员变量们
+			    private static void method2(Class c1) {
+			        //获取所有的 公共的 成员变量们
+			        Field[] fs = c1.getFields();
+			        //遍历数组,获取每个成员变量f
+			        for(Field f:fs){
+			            //获取变量名
+			            System.out.println(f.getName());
+			            //获取变量类型
+			            System.out.println(f.getType().getName());
+			        }
+			    }
+			    //反射方法们
+			    private static void method(Class c) {
+			        //获取所有的 公共的 方法们--有自己的和Object的
+			        Method[] ms = c.getMethods();
+			        //遍历数组,得到每个方法m
+			        for(Method m : ms){
+			            //获取方法名getName()
+			            String name = m.getName();
+			            System.out.println(name);
+			            //获取方法的 参数的类型
+			            Class[] cs = m.getParameterTypes();
+			            System.out.println( Arrays.toString(cs) );
+			        }
+			    }
+			}
+
+	--4,暴力反射
+		--作用是反射类里 公开的,私有的,默认的数据
+		--怎么用? 用对API + 开启权限
+			--获取公开的资源
+				getMethod()
+				getMethods()
+				getField()
+				getFields()
+				getConstrutor()
+				getConstrutors()
+			--获取 所有的 资源
+				getDeclaredMethod()
+				getDeclaredMethods()
+				getDeclaredField()
+				getDeclaredFields()
+				getDeclaredConstrutor()
+				getDeclaredConstrutors()
+		--改造
+			--改了方法的调用,都加上了Declared,暴力反射
+			--而且,对数据进行写的操作时,都开启了权限
+			--代码
+				package cn.tedu.reflect;
+
+				import java.lang.reflect.Constructor;
+				import java.lang.reflect.Field;
+				import java.lang.reflect.Method;
+				import java.util.Arrays;
+
+				//反射Student类里的数据
+				public class Test3_Student {
+				    public static void main(String[] args) throws Exception {
+				        //1,获取Class对象
+				        Class c1 = Student.class;
+				//        method(c1);//反射方法们
+				//        method2(c1);//反射成员变量们
+				//        method3(c1);//反射构造方法们
+				//        method4(c1);//利用反射创建对象
+				        method5(c1);//利用反射给成员变量set/get
+				//        method6(c1);//利用反射运行方法
+				    }
+				    //利用反射运行方法
+				    private static void method6(Class c1) throws Exception {
+				 //获取一个方法 public void show(int a)
+				 //getMethod(1,2)-1是方法名,2是参数类型的class对象
+				        Method m = c1.getDeclaredMethod("show",int.class);
+				        //让反射执行方法
+				        Object oo = c1.newInstance();
+
+				  //问题是:show方法被私有了,要进行写/改的操作,必须开启权限
+				        m.setAccessible(true);//默认是没权限的
+				        //invoke(1,2)-1是对象,2是方法具体要传入的参数
+				        m.invoke(oo,10000);
+				    }
+				    //利用反射给成员变量set/get
+				    private static void method5(Class c1) throws Exception {
+				        //获取一个成员变量
+				        Field f = c1.getDeclaredField("age");
+				        //set(1,2)--1是对象,2给属性赋的具体值
+				        Object o = c1.newInstance();
+
+				        //对私有的属性,修改,必须有权限!!
+				        f.setAccessible(true);//开启权限
+				        f.set(o,1000);//设置属性的值
+
+				        Object x = f.get(o);//设置属性的值
+				        System.out.println(x);//1000?
+				    }
+				    //利用反射创建对象
+				    private static void method4(Class c1) throws Exception {
+				        //利用反射 触发 无参构造 创建对象
+				        Object s = c1.newInstance();
+				        System.out.println(s);
+				        //利用反射 触发 含参构造 创建对象
+				        //public Student(String name)
+				        //getConstructor的参数 是String类型的Class对象
+				        Constructor c = c1.getConstructor(String.class);
+				        //newInstance的参数 是给构造方法传入的具体的参数
+				        Object o = c.newInstance("jack");
+				        System.out.println(o);
+				    }
+				    //反射构造方法们
+				    private static void method3(Class c1) {
+				        //获取所有的 公开的 构造方法们
+				        Constructor[] cs = c1.getConstructors();
+				        //遍历数组,获取每个构造方法c
+				        for (Constructor c : cs) {
+				            //获取构造方法的名字
+				            System.out.println(c.getName());
+				            //获取参数的类型
+				            Class[] cs2 = c.getParameterTypes();
+				            System.out.println(Arrays.toString(cs2));
+				        }
+				    }
+				    //反射成员变量们
+				    private static void method2(Class c1) {
+				        //获取所有的 公共的 成员变量们
+				//        Field[] fs = c1.getFields();
+				        //获取所有属性,,公开的 私有的默认的
+				        Field[] fs = c1.getDeclaredFields();
+				        //遍历数组,获取每个成员变量f
+				        for(Field f:fs){
+				            //获取变量名
+				            System.out.println(f.getName());
+				            //获取变量类型
+				            System.out.println(f.getType().getName());
+				        }
+				    }
+				    //反射方法们
+				    private static void method(Class c) {
+				        //获取所有的 公共的 方法们--有自己的和Object的
+				//        Method[] ms = c.getMethods();
+
+				        //获取 公开的 私有的 默认的
+				        Method[] ms = c.getDeclaredMethods();
+				        //遍历数组,得到每个方法m
+				        for(Method m : ms){
+				            //获取方法名getName()
+				            String name = m.getName();
+				            System.out.println(name);
+				            //获取方法的 参数的类型
+				            Class[] cs = m.getParameterTypes();
+				            System.out.println( Arrays.toString(cs) );
+				        }
+				    }
+				}
+
+
+			
+
+
+
+扩展
+	--1,反射注解方法并运行
+		

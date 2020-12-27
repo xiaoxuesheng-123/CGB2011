@@ -1,0 +1,327 @@
+一,static关键字
+	--1,特点
+		--可以修饰成员变量，成员方法
+		--随着类的加载而加载，优先于对象加载
+		--只加载一次，就会一直存在，不再开辟新空间
+		--全局唯一，全局共享
+		--可以直接被类名调用
+		--静态只能调用静态，非静态可以随意调用
+		--static不能和this或者super共用
+	--2,测试
+		package cn.tedu.oop;
+		//测试 静态关键字
+		public class Test1_Staticc {
+			public static void main(String[] args) {
+				//TODO 2,静态资源比对象 先加载进内存
+				Person.code();
+				System.out.println(Person.name);
+				
+				//TODO 3,普通资源只能通过对象访问
+				Person p = new Person();
+				p.eat();
+				System.out.println(p.age);
+				
+				//TODO 4,静态资源的访问方式:对象或者类名
+				System.out.println(p.name);
+				p.code();
+				Person.code();
+				System.out.println(Person.name);
+				
+				//TODO 5,多个对象间全局共享
+				Person p2 = new Person();
+				Person p3 = new Person();
+				p2.name="jerry";
+				System.out.println(p3.name);//jerry
+			}
+		}
+		class Person{
+			//TODO 普通资源
+			int age = 10;
+			public void eat(){
+				//普通资源 调用 静态资源 - 可以
+				System.out.println(name);
+				System.out.println("吃肉");
+			}
+			//TODO 1, 静态资源 --随着类的加载而加载
+			static String name = "jack";
+			static void code(){
+				//静态资源 调用 普通资源 - 不可以,
+				//6,静态资源 调用 静态资源
+		//		System.out.println(age);
+		//		eat();
+				System.out.println("code..");
+			}
+		}
+
+二,代码块
+	--1,代码块
+		一段被花括号包起来的代码
+		在成员位置的代码块--构造代码块
+		在局部位置的代码块--局部代码块
+	--2,静态代码块
+		在成员位置的代码块,被static修饰
+		只加载一次,就会一直存在
+	--3,测试
+		package cn.tedu.oop;
+		//测试 代码块
+		//总结
+		//1,触发节点:
+		//1,当类加载时,执行 静态代码块
+		//2,当实例化时,先执行 构造代码块 再执行构造方法
+		//3,当调用方法时,执行 局部代码块
+		//作用:略
+		//执行顺序:静态代码块>构造代码块>构造方法>局部代码块
+		public class Test2_Block {
+			public static void main(String[] args) {
+				new Person2().show();
+				new Person2().show();
+			}
+		}
+		class Person2{
+		//TODO 静态代码块-在成员位置-类加载时触发-完成项目的
+			static{//来的早,走的晚. 只加载一次.
+				System.out.println(9);
+			}
+		//TODO 构造代码块-在成员位置-new时触发-用来提取共性 
+			{
+				System.out.println(1);
+			}
+		//TODO Constructor-new时触发-用来创建对象 
+			public Person2(){
+				System.out.println(3);
+			}
+		//TODO 局部代码块-在局部位置-调用方法时触发-控制变量的范围
+			static public void show(){
+				{
+					System.out.println(2);
+				}
+			}
+		}
+
+
+三,final关键字
+	--1,概述
+		当子类继承了父类以后,子类可以用父类的所有功能,还能扩展,还能改.
+		如果父类的功能,只让继承,不许改--用final
+	--2,使用场景
+		--可以修饰类,是最终的类,不能被继承
+		--可以修饰方法,不能被重写
+		--可以修饰变量,值不能被修改,变成了常量
+	--3,测试
+		package cn.tedu.oop;
+		//测试 final关键字
+		//--可以修饰类,是最终的类,不能被继承
+		//--可以修饰方法,不能被重写
+		//--可以修饰常量,值不能被修改,变成了常量
+		public class Test3_Final {
+			public static void main(String[] args) {
+				//TODO 创建对象 测试
+				Zi zi = new Zi();
+		//		zi.age = 30;
+				System.out.println(zi.age);//30
+			}
+		}
+		//The type Zi cannot subclass the final class Fu
+		//final class Fu{
+		class Fu{
+		//The final field Fu.age cannot be assigned
+			final int age = 10 ;
+			public static final int SUM = 10 ;
+			
+			public void eat(){
+				System.out.println(1);
+			}
+		//Cannot override the final method from Fu
+			final public void name(){
+				System.out.println(2);
+			}
+		}
+		class Zi extends Fu{
+			public void eat(){
+				System.out.println(10);
+			}
+			
+		}
+
+四,多态
+	--1,概述
+		是指一个对象,具有多个形态
+		好处是:提高程序的通用性,灵活性.统一性
+	--2,口诀
+		前提是:继承 + 重写
+		口诀1:父类引用 指向 子类对象
+				  Animal a = new Dog();//多态
+		口诀2:编译看左边,运行看右边	
+					编译看左边-只能用父类提供的功能
+					运行看右边-指结果以子类为准	
+	--3,测试	
+		package cn.tedu.oop;
+		//测试 多态
+		public class Test4_Duotai {
+			public static void main(String[] args) {
+				//创建子类对象 测试 :
+				//子类能用 父类继承来的,还有自己扩展的,还能重写.
+				Dog d = new Dog();
+				d.eat();//重写了,用了子类的方法体
+				d.la();//父类的
+				d.show();//自己扩展的
+				
+				//TODO 创建多态对象测试
+				//口诀1:父类引用 指向 子类对象
+				Animal a = new Dog();//多态/向上造型
+				//口诀2:编译(保存)看左边,运行(结果)看右边
+		//好处是:统一调用标准,父类就是标准
+				a.eat();//重写了,就执行子类的方法体
+				a.la();//没重写,执行父类的方法体
+		//		a.show();子类的特有方法,不能用
+			}
+		}
+		//前提:继承 + 方法的重写
+		//父类 写 共性的内容
+		class Animal{
+			public void eat(){
+				System.out.println("干饭");
+			}
+			public void la(){
+				System.out.println("翔");
+			}
+		}
+		//子类 里 一般都是方法重写,很少扩展
+		class Dog extends Animal{
+			@Override//注解
+			public void eat(){
+				System.out.println("吃xiang");
+			}
+			public void show(){
+				System.out.println("show...");
+			}
+		}
+
+
+五,使用多态
+	--1,好处
+		--让程序通用性更强.多态里,把子类当父类来看,屏蔽了子类间的不同.
+		--统一调用的标准,向父类看齐
+	--2,测试
+		package cn.tedu.oop;
+		//测试 多态的使用
+		//总结
+		//1, 多态用来 统一调用标准,标准是父类
+		//2, 创建对象的口诀:父类引用指向子类对象
+		//3, 使用对象的口诀:编译看左边,运行看右边
+		//4, 非要用子类特有的--直接创建子类对象
+		public class Test5_UseDT {
+			public static void main(String[] args) {
+				//TODO 创建多态对象测试 
+				Father f = new Son();//多态/向上造型
+				//成员变量是 - 父类的
+				System.out.println(f.name);
+				//方法声明父类的,方法体-子类的(重写了)
+				f.eat();
+		//TODO 静态方法,可以被重写吗--不能?都用父类的
+				f.test();
+		//TODO 子类扩展的,多态对象根本不让用.
+				//非要用,咋办?--直接创建子类对象
+			}
+		}
+		//多态前提:继承 + 重写
+		class Father{
+			String name = "蔡徐坤";
+			public void eat(){
+				System.out.println("驴肉火烧");
+			}
+			static public void test(){
+				System.out.println("test1");
+			}
+		}
+		class Son extends Father{
+			//不是重写,只是子类扩展的方法
+			static public void test(){
+				System.out.println("test2");
+			}
+			String name = "唱跳rap";
+			@Override
+			public void eat(){
+				System.out.println("猪肉火烧");
+			}
+		}
+
+六,异常
+	--1,概述
+		程序中出现的bug
+	--2,异常的继承结构
+		Throwable
+			Error--系统错误
+			Exception--程序中bug的父类
+	--3,异常的处理
+		--捕获:自己把异常处理掉
+			try{
+				有可能出问题的代码
+			}catch(异常的类型 变量名){
+				给出的方案
+			}catch(异常的类型 变量名){
+				给出的方案
+			}
+		
+		--抛出:自己不管,交给调用者处理
+			在方法声明上加一段代码: 
+				throws 异常类型1,异常类型2
+	--4,测试
+		package cn.tedu.oop;
+
+		import java.util.InputMismatchException;
+		import java.util.Scanner;
+
+		//测试 异常的处理
+		public class Test6_Exception {
+			public static void main(String[] args) {
+		//		method();//暴露异常
+				method2();//捕获异常
+		//		method3();//抛出异常
+			}
+			//捕获异常
+			/*
+			 	try{
+					有可能出问题的代码
+				}catch(异常的类型 变量名){
+					给出的方案
+				}
+			 */
+			public static void method2() {
+				try{
+					int a = new Scanner(System.in).nextInt();
+					int b = new Scanner(System.in).nextInt();
+					System.out.println(a/b);
+				}catch(ArithmeticException x){
+					System.out.println("第二次输入不能为0!");
+				}catch(InputMismatchException x){
+					System.out.println("请输入两次整数!");
+				}
+			}
+			//暴露异常
+			public static void method() {
+				//接收用户输入的两个整数,做除法
+				int a = new Scanner(System.in).nextInt();
+				int b = new Scanner(System.in).nextInt();
+				System.out.println(a/b);
+			}
+		}
+	
+扩展:
+	--1,程序设计题目
+		描述两个事物: cgb老师  Scala老师
+		共性行为: 备课  讲课
+		测试: 创建多态对象
+
+
+
+
+
+
+
+
+
+
+
+
+

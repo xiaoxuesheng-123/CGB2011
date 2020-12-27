@@ -1,0 +1,376 @@
+一,String测试
+	--1,代码
+		package cn.tedu.api;
+
+		import java.util.Arrays;
+		import java.util.Scanner;
+
+		//测试 字符串
+		public class Test3_String {
+		    public static void main(String[] args) {
+		        //1,创建String对象
+		        String s = new String();
+
+		        //TODO 特点:String底层是一个char[]
+		//      String(char[] value)
+		        char[] value = {'h','e','l','l','o'};
+		        String s2 = new String(value);
+		        //2,调用方法
+		        System.out.println( s2.charAt(2) );//获取下标2对应的字符
+		        System.out.println( s2.concat("123") );//在s2后面拼接"123"
+		        System.out.println( s2.contains("xyz") );//判断s2包含"xyz"吗
+		        System.out.println( s2.endsWith("llo") );//判断s2是否以"llo"结尾
+		        System.out.println( s2.equals("hello") );//判断s2是否与?相等
+		        //TODO 测试其他方法
+		//     获取s2在内存中的地址值
+		        System.out.println( s2.hashCode() );
+		//      获取l字符串在s2里第一次出现的索引值
+		        System.out.println( s2.indexOf("l") );
+		//      获取l字符串在s2里最后一次出现的索引值
+		        System.out.println( s2.lastIndexOf("l"));
+		//      判断s2是否为空
+		        System.out.println( s2.isEmpty() );
+		//      获取s2的长度
+		        System.out.println( s2.length() );
+		//      拿着新字符,替换老字符
+		        System.out.println( s2.replace('l','a'));
+		//      判断是否以"he"开始
+		        System.out.println( s2.startsWith("he") );
+		//      从2索引开始截取字符串
+		        System.out.println( s2.substring(2));
+		//      从2索引开始,到4索引结束截取字符串--含头不含尾
+		        System.out.println( s2.substring(2,4));
+		//      全转小写
+		        System.out.println( s2.toLowerCase());
+		//      全转大写
+		        System.out.println( s2.toUpperCase());
+		//      展示 属性值
+		        System.out.println( s2.toString());
+		//      去除前面和后面的多余空格
+		        s2 = " he ll o  " ;
+		        System.out.println( s2.trim());
+		//      把各种类型的数据  转成 String类型
+		        String ss = String.valueOf(100);
+		        System.out.println(ss);
+		//     把s2的每个字符,存入char[]
+		        char[] cs = s2.toCharArray();
+		        System.out.println(cs);
+		//      把s2里的每个字符对应的整数,存入byte[]
+		        byte[] bs = s2.getBytes();
+		        System.out.println(Arrays.toString(bs) );
+		        //按照指定的规则,切割字符串
+		        s2 = "a1b1c1d1e1f" ;
+		        String[] strs = s2.split("d");
+		        System.out.println( Arrays.toString(strs) );
+		        //练习
+		//     接收用户输入的字符串,打印每个字符
+		        String input = new Scanner(System.in).nextLine();
+		        //遍历字符串
+		        for(int i = 0;i < input.length();i++) {//fori
+		            //获取每个字符
+		            char c = input.charAt(i) ;
+		            System.out.println(c);
+		        }
+		    }
+		}
+
+
+二,StringBuilder/StringBuffer
+	--1,概述
+		优化 字符串拼接
+	--2,创建对象
+		StringBuilder() 
+	--3,常用方法
+		append()
+	--4,测试
+		package cn.tedu.api;
+		//测试 字符串 拼接的 工具类
+		//1,专门用来 优化 大量 的字符串拼接的需求
+		//2,创建工具类对象+调用append()追加数据
+		public class Test1 {
+		    public static void main(String[] args) {
+		//        method();//用+拼接
+		        method2();//用工具拼接
+		    }
+		    //用工具拼接
+		    public static void method2() {
+		        String s = "abcdefghijklmn";
+		        //1,创建对象
+		        StringBuilder sb = new StringBuilder();
+		        long start = System.currentTimeMillis();//计时开始
+		        for (int i = 0; i < 10000; i++) {
+		            //2,调用拼接方法
+		            sb.append(s);
+		        }
+		        long end = System.currentTimeMillis(); //计时结束
+		        System.out.println(end-start);//1ms
+		    }
+		    //用+拼接
+		    public static void method() {
+		        String s = "abcdefghijklmn";
+		        //把s拼接10000次,并打印结果
+		        String s2 ="";//定义变量,记录结果
+		long start = System.currentTimeMillis();//计时开始
+		        for (int i = 0; i < 10000; i++) {
+		            s2 = s2+s ;
+		        }
+		long end = System.currentTimeMillis(); //计时结束
+		        System.out.println(end-start);//1132ms
+		    }
+		}
+
+
+三,包装类
+	--1,概述
+		专门用来给 基本类型 提供丰富的功能
+		基本类型 byte  short  int long float double boolean char 
+		包装类型 Byte  Short Integer Long Float Double Boolean Character
+	--2,Number
+		是 数字类型的包装类的父类
+		子类有:Byte Short Integer Long Float Double
+		常用的功能:把包装类型 变成 基本类型
+	--3,Integer
+		把 基本类型 变成包装类型
+		使用包装类提供的各种方法
+		--创建对象
+			Integer(int value) 
+		--常见方法
+			int intValue()  
+			static int parseInt(String s) 
+ 			static Integer valueOf(int i)  	
+		--测试
+			package cn.tedu.api;
+			//测试 包装类
+			public class Test2_Number {
+			    public static void main(String[] args) {
+			        //1,创建Integer对象 -- 自动装箱
+			  //把5从基本类型 变成 Integer类型,用Integer的各种方法
+			        Integer in = new Integer(5);
+			        Integer in2 = Integer.valueOf(5);
+
+			        //TODO 2,调用方法
+			//      把包装类 变成 基本类型 -- 自动拆箱-参与运算
+			        int a = in.intValue();
+			        System.out.println(a);//5
+
+			//      把字符串类型的整数  解析成int类型
+			        int x = Integer.parseInt("100");
+			        System.out.println(x);
+
+			        //double -> Double:使用Double的方法--自动装箱
+			        Double d = new Double(3.2);
+			        Double d2 = Double.valueOf(3.2);
+			        //Double -> double:参与运算--自动拆箱
+			        double d3 = d.doubleValue();
+			        System.out.println(d3+1);//4.2
+			    }
+			}
+
+四,日期类Date
+	--1,概述
+		专门 对日期 操作的工具类
+	--2,创建对象
+		Date() 
+	--3,常用方法
+		getXxx()
+	--4,测试
+		package cn.tedu.api;
+		import java.util.Date;
+		//测试 Date工具类
+		public class Test3_Date {
+		    public static void main(String[] args) {
+		        //1,创建对象
+		        Date d = new Date();
+		        //2,调用方法
+		        //从1970.1.1 0点到现在的毫秒值
+		        System.out.println( d.getTime() );
+		        System.out.println( d.getDate() );//今天是多少号
+		        System.out.println( d.getDay() );//今天礼拜几
+		        System.out.println( d.getHours() );//现在是几点
+		        System.out.println( d.getMinutes() );//现在是哪一分钟
+		        System.out.println( d.getMonth() );//获取月份,自然月-1
+		        System.out.println( d.getSeconds() );//现在是几几秒
+		        System.out.println( d.getClass());//获取类的对象
+		        System.out.println( d.toLocaleString() );
+		        //2020-12-15 14:52:48
+		        //获取年份,从1900到现在是多少年,120
+		        System.out.println( d.getYear() );
+		    }
+		}
+
+
+五,日期工具SimpleDateFormat
+	--1,概述
+		专门用来把两种类型的日期数据 互转
+		String -> Date
+		Date -> String
+	--2,创建对象
+		SimpleDateFormat(String pattern) 
+	--3,常用方法
+		Date parse(String text)用来String -> Date
+		String format(Date date)用来Date -> String
+	--4,测试			
+		package cn.tedu.api;
+		import java.text.ParseException;
+		import java.text.SimpleDateFormat;
+		import java.util.Date;
+		import java.util.Scanner;
+
+		//测试 日期格式化工具类
+		public class Test4_Date2 {
+		    public static void main(String[] args)
+		                        throws ParseException {
+		//        method();//互转
+		        method2();//出生天数
+		    }
+		    //出生天数
+		    public static void method2()
+		                    throws ParseException {
+		        //1,接收一串 输入的 出生日期
+		String birthday = new Scanner(System.in).nextLine();
+		        //2,使用工具类
+		SimpleDateFormat sdf =
+		        new SimpleDateFormat("yyyy-MM-dd");
+		       //把String->Date
+		        Date day = sdf.parse(birthday);
+		        //算天数
+		        long start = day.getTime();//出生的毫秒值
+		        long now = System.currentTimeMillis();//现在的毫秒值
+		        // ms->天
+		        System.out.println((now-start)/1000/60/60/24 );
+		    }
+		    //互转
+		    public static void method()
+		                        throws ParseException {
+		        //1,创建对象--指定日期的格式
+		   SimpleDateFormat s =
+		                //y表示年 M表示月 d表示日
+		       new SimpleDateFormat("yyyy-MM-dd");
+
+		   //2,调用方法 String -> Date
+		        Date d = s.parse("1990-1-1");
+		        //好处是:使用Date的getXxx()
+		        System.out.println(d.getMonth()+1);
+		    }
+		}
+
+六,BigDecimal/BigInteger
+	--1,概述
+		BigDecimal专门用来解决java里小数运算不精确的问题
+		BigInteger专门用来解决超大型的整数运算
+	--2,BigDecimal
+		--创建对象
+			BigDecimal(double val)//有坑,,,
+			BigDecimal(String val)//推荐!!!! 
+		--常用方法
+			加法:BigDecimal add(BigDecimal augend) 
+			减法:BigDecimal subtract(BigDecimal subtrahend)  
+			乘法:BigDecimal multiply(BigDecimal multiplicand) 
+ 			除法:BigDecimal divide(BigDecimal divisor)  
+		--测试
+			package cn.tedu.api;
+
+			import java.math.BigDecimal;
+			import java.util.Scanner;
+
+			//测试
+			public class Test5_BigD {
+			    public static void main(String[] args) {
+			//        method();//+-*/
+			        method2();//用工具
+			    }
+			    //用工具
+			    private static void method2() {
+			        double a =  new Scanner(System.in).nextDouble();
+			        double b =  new Scanner(System.in).nextDouble();
+			        //1,创建对象
+			        //构造方法,double类型的不能用,更不精确!!!!
+			//        BigDecimal bd1 = new BigDecimal(a);
+			//        BigDecimal bd2 = new BigDecimal(b);
+
+			        //用String类型的构造方法!!!!
+			        //double->String
+			        //方式1:String.valueOf(a)
+			        //方式2: a+""
+			 BigDecimal bd1 = new BigDecimal(a+"" );
+			        BigDecimal bd2 = new BigDecimal( b+"" );
+			        //2,调用方法
+			        BigDecimal bd3 = bd1.add(bd2);//加法
+			        System.out.println(bd3);
+
+			        bd3 = bd1.subtract(bd2);//减法
+			        System.out.println(bd3);
+
+			        bd3 = bd1.multiply(bd2);//乘法
+			        System.out.println(bd3);
+
+			 //除不尽的异常:java.lang.ArithmeticException
+			//        bd3 = bd1.divide(bd2);//除法
+			  //divide(1,2,3)--1就是想除谁 2就是要保留几位 3舍入方式
+			        bd3 = bd1.divide(bd2,3,BigDecimal.ROUND_HALF_UP);//除法
+			        System.out.println(bd3);
+			    }
+			    //+-*/
+			    public static void method() {
+			        //接收用户输入的两个小数
+			        double a =  new Scanner(System.in).nextDouble();
+			        double b =  new Scanner(System.in).nextDouble();
+			        //运算
+			        System.out.println(a+b);//不精确
+			        System.out.println(a-b);//不精确
+			        System.out.println(a*b);//不精确
+			        System.out.println(a/b);//不精确
+			    }
+			}
+
+
+七,IO
+	--1,概述
+		IO是简称.以程序为准.
+		i全称是in,是指从磁盘 读取 到程序中的过程
+		o全称是out,是指从程序中 写出 到磁盘的过程
+		根据读写数据的类型不同,分为两种流.
+		字符流:专门用来读写字符文件txt
+		字节流:可以读写任意类型的文件--推荐
+	--2,工具类
+		字节流读取
+			InputStream FileInputStream BufferedInputStream
+		字节流写出
+			OutputStream FileOutputStream BufferedOutputStream
+	--3,File工具类
+		--创建对象
+			File(String pathname) 
+		--常用方法
+			略
+		--测试
+			package cn.tedu.api;
+			import java.io.File;
+			//测试 File文件流
+			public class Test6_File {
+			    public static void main(String[] args) {
+			        //1,创建对象 -- 指定文件的路径
+			        File file =
+			                new File("D:\\iotest\\1.txt");
+			        //2,调用方法
+			        System.out.println(file.getName());
+			        System.out.println(file.length());
+			        //TODO
+			//        length()：文件的字节量
+			//        exists()：是否存在，存在返回true
+			//        isFile()：是否为文件，是文件返回true
+			//        isDirectory()：是否为文件夹，是文件夹返回true
+			//        getName()：获取文件/文件夹名
+			//        getParent()：获取父文件夹的路径
+			//        getAbsolutePath()：获取文件的完整路径
+			//        createNewFile()：新建文件，文件夹不存在会异常，文件已经存在返回false
+			//        mkdirs()：新建多层不存在的文件夹\a\b\c
+			//        mkdir()：新建单层不存在的文件夹\a
+			//        delete()：删除文件，删除空文件夹
+			//        list()：返回String[]，包含文件名
+			//        listFiles()：返回File[]，包含文件对象
+			    }
+			}
+
+	
+扩展:
+	

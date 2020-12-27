@@ -1,0 +1,346 @@
+一,字节流写出
+	--1,代码
+		package cn.tedu.api;
+		import java.io.*;
+		//测试 写出流:
+		//1,FileOutputStream:普通写出流
+		//2,BufferedOutputStream : 高效流/缓冲流
+
+		//效率:BufferedOutputStream > FileOutputStream
+		//原因是:底层维护了一个byte[] buf=8192
+		//不再是一个一个写出到磁盘了,而是一个数组直接批量写出去.
+		//提高了单字节写出的效率
+		public class Test3_Out {
+		    public static void main(String[] args)
+		            throws IOException {
+		//        method();//FileOutputStream写出
+		        method2();//BufferedOutputStream高效写出流
+		    }
+		    //BufferedOutputStream高效写出流
+		    private static void method2() throws IOException {
+		        //1,创建多态对象
+		        OutputStream out = new BufferedOutputStream(
+		                new FileOutputStream(
+		                     //追加数据的模式
+		                     "D:\\iotest\\1.txt",true)
+		                );
+		        //2,写出数据
+		        out.write(97);
+		 //write()的参数可以是byte[],需要把字符串变成byte[]
+		        out.write("java".getBytes());
+		        //3,关闭资源
+		        out.close();
+		    }
+		    //普通流写出
+		    public static void method() throws IOException {
+		        //1,创建多态对象测试
+		        //FileOutputStream(String name)--数据覆盖
+		//        OutputStream out =new FileOutputStream("D:\\iotest\\1.txt");
+
+		 //FileOutputStream(String name, boolean append)
+		 //第二个参数如果是true,就是数据追加模式
+		 OutputStream out =new FileOutputStream(
+		         "D:\\iotest\\1.txt",true);
+		        //2,开始写出
+		        out.write("我爱java".getBytes());
+		  //为了能写出一串数据,把String转成byte[]
+		        out.write(97);
+		        out.write(97);
+		        //3,释放资源
+		        out.close();
+		        //Stream closed!
+		//        out.write(97);
+
+		    }
+		}
+	--2,练习:复制文件
+		package cn.tedu.io;
+
+		import java.io.*;
+		import java.util.Scanner;
+
+		//测试 文件复制
+		public class Test1_Copy {
+		    public static void main(String[] args) throws IOException {
+		        System.out.println("请输入 源文件 的路径:");
+		        String frompath= new Scanner(System.in).nextLine();
+
+		        System.out.println("请输入 目标文件 的路径:");
+		        String topath= new Scanner(System.in).nextLine();
+		        //调用方法,完成复制
+		        copyFile(frompath,topath);
+		        System.out.println("文件复制已完成!");
+		    }
+		    //完成文件复制
+		    private static void copyFile(
+		            String frompath, String topath) throws IOException {
+		        //读取源文件frompath,写出到目标文件topath里去
+		        //1,准备 读写流
+		        InputStream in = new BufferedInputStream(
+		                new FileInputStream(frompath) );
+		        OutputStream out = new BufferedOutputStream(
+		                new FileOutputStream(topath) );
+		        //2,开始读写
+		        int b = 0;//定义变量,记录读到的数据
+		        while( ( b = in.read() ) != -1){
+		            out.write(b);//写出
+		        }
+		        //3,关闭资源
+		        in.close();
+		        //把out流 里的数据,刷到磁盘里
+		//        out.flush();//刷新
+		        out.close();//flush + close
+		        
+		        //面试题:flush 和 close的区别
+
+
+		    }
+		}
+
+		
+二,泛型
+	--1,概述
+		用来约束集合中元素的类型,增强程序的通用性.
+		通常配合集合使用,标识<>.
+		泛型是（Generics）是JDK1.5 的一个新特性，其实就是一个『语法糖』，本质上就是编译器为了提供更好的可读性而提供的一种小手段
+	--2,使用的位置
+		--类/接口上
+			class Student<T>{}
+			interface List<E>{}
+		--方法上
+			public <E> void eat(E x){}
+	--3,测试
+		package cn.tedu.io;
+
+		import java.util.ArrayList;
+		import java.util.List;
+
+		//测试 泛型的作用
+		public class Test2_Generic {
+		    public static void main(String[] args) {
+		//        method();//类型检查
+		        method2();//增强通用性
+		    }
+		    //打印数组里的数据
+		    private static void method2() {
+		        Integer[] a = {1,2,3,4,5};
+		        print(a);
+		        Double[] b = {1.1,2.2,3.3,4.4,5.5};
+		        print(b);
+		        String[] c = {"杨幂","Anglelababa","古力娜扎","迪丽热巴"};
+		        print(c);
+		    }
+		    //作用2:泛型的通用性
+		    //在方法上用泛型,两个位置必须同时出现..
+		    private static <E> void print(E[] a) {
+		        for (int i = 0; i < a.length; i++) {
+		            System.out.println(a[i]);
+		        }
+		    }
+		    //作用1:类型检查 + 报错前置
+		    private static void method() {
+		        //模拟数组:类型检查+报错前置
+		//        int[] a = {1.1,2,3,4,5};
+		        //1,集合里可以添加 任意类型 的元素
+		        List list = new ArrayList();
+		        list.add(10);
+		        list.add(2.3);
+		        list.add(true);
+		        list.add("hello");
+		        //2,使用泛型 约束list2集合里元素的类型String
+		        List<String> list2 = new ArrayList();
+		        list2.add("100");
+		        list2.add("200");
+		//      list2.add(100);//没有通过泛型的类型检查
+
+		        //3,泛型的<??>--??不能是基本类型,必须是引用类型
+		        List<Integer> list3 = new ArrayList();
+		        //1是基本类型,约束的必须是包装类型,为什么不报错?
+		        list3.add(1);
+		        //自动装箱-把基本类型变成包装类型 new Integer(1)
+
+		    }
+		}
+
+
+			
+
+三,集合
+	--1,概述
+		集合可以存储多个数据,集合可以解决数组的劣势
+		数组的优点:有下标,查的快
+		数组的缺点:长度是固定,存储数据的类型必须统一
+	--2,集合的优势
+		存的数据类型 丰富
+		有适合各种业务的集合,有适合增删的,有适合查		询的(数组).
+	--3,继承结构
+		见图
+四,Collection接口
+	--1,概述
+		Collection 层次结构 中的根接口。
+	--2,测试
+		package cn.tedu.util;
+		import java.util.ArrayList;
+		import java.util.Arrays;
+		import java.util.Collection;
+		import java.util.Iterator;
+
+		//测试 Collection接口的方法们
+		public class Test3_Collection {
+		    public static void main(String[] args) {
+		        //1,创建多态对象测试
+		        Collection c = new ArrayList();
+		        //2,调用方法
+		        c.add(1);//添加元素
+		        c.add(2);
+		        c.add(3);
+		        System.out.println(c);//[1, 2, 3]
+		        System.out.println(c.contains(2));//是否包含
+		        System.out.println(c.equals(123));//是否相等
+		        System.out.println(c.hashCode());//c哈希码值
+		        System.out.println(c.isEmpty());//是否为空
+		        System.out.println(c.remove(3));//移除3这个元素
+		        System.out.println(c.size());//集合的长度
+		        System.out.println(c);//[1, 2]
+		//        c.clear();//清空c集合
+		//        System.out.println(c.size());//0
+		        //把c里的元素,存入数组里
+		        Object[] os = c.toArray();
+		        //[1, 2]
+		        System.out.println(Arrays.toString(os));
+		        //TODO 集合间的操作--了解
+		        Collection c2 = new ArrayList();
+		        c2.add(2);
+		        c2.add(3);
+		        System.out.println(c.addAll(c2));//把c2加入c
+		        System.out.println(c.containsAll(c2));//c里有c2吗
+		        System.out.println(c.removeAll(c2));//移除交集
+		        System.out.println(c.retainAll(c2));//保留交集
+
+		        //TODO 迭代集合--一个一个获取集合里的元素
+		//Iterator<E> iterator():Iterator是一个接口,用来迭代集合
+		        Iterator it = c.iterator();
+		        //hasNext() 判断有没有元素
+		        while(it.hasNext()){
+		            Object o = it.next();//next()获取元素
+		            System.out.println(o);
+		        }
+
+		    }
+		}
+五,List子接口
+	--1,概述
+		是Collection的子接口,可以用Collection的所			有功能,而且还能扩展.
+	--2,特点
+		有序
+		有索引
+		可重复
+		能存null
+		还能存多个null
+	--3,常用方法
+		--继承自父接口Collection的
+			略
+		--自己扩展的
+			void add(int index, E element)  
+			boolean addAll(int index, Collection c)  
+			E get(int index)  
+			int indexOf(Object o)  
+			int lastIndexOf(Object o) 
+			ListIterator<E> listIterator()  
+			E remove(int index) 
+			E set(int index, E element) 
+			List<E> subList(int fromIndex,int toIndex) 	
+	--4,测试 			
+		package cn.tedu.util;
+
+		import javax.sound.sampled.SourceDataLine;
+		import java.util.ArrayList;
+		import java.util.Iterator;
+		import java.util.List;
+		import java.util.ListIterator;
+
+		//测试 List接口的方法
+		public class Test4_List {
+		    public static void main(String[] args) {
+		        //1,创建多态对象测试
+		    //TODO 泛型用来约束集合里的元素类型,只能写引用类型
+		        List<Integer> list = new ArrayList();
+		        //2,调用方法
+		//        继承自父接口的 略...
+		        list.add(100);
+		        list.add(200);
+		        list.add(300);
+		        list.add(100);
+		        list.add(null);
+		        list.add(200);
+		        list.add(null);
+		        //特点:有序+可重复+可以存多个null+有索引
+		        System.out.println(list);
+		 //[100, 200, 300, 100, null, 200, null]
+		        //自己扩展的--根据索引操作数据
+		        list.add(2,500);//在下标2处插入500元素
+		        System.out.println(list.get(3));//根据下标获取元素
+		        //获取元素100,第一次出现的索引值
+		        System.out.println(list.indexOf(100));
+		        //获取元素100,最后一次出现的索引值
+		        System.out.println(list.lastIndexOf(100));
+		        //移除下标为3的元素
+		        System.out.println(list.remove(3));
+		        //把下标为4的元素,替换成666
+		        System.out.println(list.set(4,666));
+		        //截取子List,含头不含尾 [1,5)
+		        List<Integer> list2 = list.subList(1, 5);
+		//        boolean addAll(int index, Collection c)
+
+		        //TODO 迭代List集合
+		        //方式1:继承来的Iterator<E> iterator()
+		        Iterator<Integer> it = list.iterator();
+		        while (it.hasNext()){//判断有没有元素
+		            Integer data = it.next();//获取元素
+		            System.out.println(data);//打印元素
+		        }
+		        //方式2:自己扩展的ListIterator<E> listIterator()
+		        ListIterator<Integer> it2 = list.listIterator();
+		        //正向迭代
+		        while(it2.hasNext()){//判断后面有元素吗
+		            Integer data = it2.next();//获取后面的元素
+		            System.out.println(data);
+		        }
+		        //逆向迭代--了解--必须先正向迭代
+		        while(it2.hasPrevious()){//判断前面有元素吗
+		            Integer data = it2.previous();//获取前面的元素
+		            System.out.println(data);
+		        }
+		//TODO 面试题:方式1 和 方式2的区别??
+		//方式1返回的接口是父接口,方式2返回的接口是子接口
+		//父接口里只提供了正向迭代的方法,子接口除了正向迭代 ,还扩展了 逆向迭代--不用!!
+		        //方式3:根据下标迭代
+		        for (int i = 0; i < list.size(); i++) {
+		            //根据下标获取元素
+		            Integer data = list.get(i);
+		            System.out.println(data);
+		        }
+		        //方式4:增强for循环/foreach循环
+		        //语法:for(得到的数据的类型  变量名 : 循环的容器){}
+		        //使用场景:数组 | Collection集合
+		        //缺点:没法根据下标操作具体元素
+		        for(Integer  a : list){
+		            System.out.println(a);
+		        }
+
+		        int[] a = {1,2,3,4,5};
+		// for(int i = 0;i < a.length;i++){System.out.println(a[i]);}
+		// for(int data : a){System.out.println(data);}
+		    }
+		}
+
+
+扩展:
+	--作业:
+    --读取1.txt里的数据,并存入list中
+    --给list集合里的元素去重
+	--1,总结IO流
+	--2,IO面试题
+		--字节流和字符流的区别
+		--Buffered流高效的原理
+		--close和flush的区别

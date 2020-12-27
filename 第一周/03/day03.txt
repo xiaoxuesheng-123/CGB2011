@@ -1,0 +1,252 @@
+一,基本类型的字面值（5条）
+	--1,代码	
+		package cn.tedu.basic;
+			//测试 基本类型的字面值
+			public class Test1 {
+				public static void main(String[] args) 			{
+					//1,小数字面值的类型默认就是double
+					double a = 9.3 ;
+					//2,整数的字面值默认就是int类型
+					int b = 10000 ;
+					//3,如果在范围内,可以直接赋值
+					char c = 65535 ;//0~65535
+					//4,字面值后缀l f d
+					//l/L -> long  f/F -> float  d/D -> double 
+					float d = 9.3f;
+					//后缀f--把9.3从默认的double类型变成float类型
+					long e = 22000000000000L ;
+					//后缀L--把右侧的整数从默认的int类型变成long类型
+					double f = 3d ;
+					//后缀d--把3从默认的int类型转成double类型
+					//5,进制前缀 -- 了解
+					//二进制  -- 0b???
+					//八进制 -- 0??
+					//十进制
+					//十六进制 --0x????
+				}
+			}
+二,基本类型的类型转换
+	--1,概述
+		把大类型和小类型的数据进行互转
+	--2,测试
+		package cn.tedu.basic;
+		//测试 类型转换
+		public class Test2 {
+			public static void main(String[] args) {
+				//1,小转大/隐式转换    long->double
+				long a = 1000;
+				double b = a ;
+		//拿着右侧的小类型的a 给,左侧的大类型的b赋值--直接赋值
+				
+				//2,大转小/显式转换   float->int
+				float m = 1.3f ;
+		//		int n = m ;
+				int n = (int) m ;
+		//拿着右侧的大类型的m 给,左侧的小类型的n赋值
+				//--不能直接赋值,需要强转
+				
+				//TODO 面试题:显式转换 和  隐式转换  区别?
+		//		小int->大double
+				int x = 10;
+				double y = x;//小转大,直接写
+				
+				double c = 9.9;
+				int d = (int)c ;//大转小,需要强转--显式转换
+				System.out.println(d);//9
+				//由于d是整数类型,只存整数部分
+			}
+			
+		}
+
+三,运算规则(5条)
+	--1,代码
+		package cn.tedu.basic;
+		//测试 运算规则
+		public class Test3 {
+			public static void main(String[] args) {
+				//1,结果和大的类型一致
+				System.out.println(3/2);
+				//int/int->int === 1
+				System.out.println(3d/2);
+				//double/int->double ===1.5
+				System.out.println(3/2f);
+				//int/float->float ===1.5
+				
+				//2,byte  short char参与运算后的结果是int类型
+				byte a = 3 ;
+				byte b = 4 ;
+		//右侧的运算结果是int类型,给左侧的小类型byte赋值--需要强转
+		//		byte c = a+b;//大转小--需要强转
+				byte c = (byte)(a+b);
+				
+				//3,整数运算溢出
+				//光速运行一年是多少米 300000000m/s
+				System.out.println(300000000L*60*60*24*365);
+				//由于运算结果太大了,超出了int范围,所以需要把类型
+				//从默认的int类型 扩大成 long类型--加后缀L
+				
+				//4,小数运算结果不精确
+				System.out.println(1-0.8);
+				//5,小数运算特殊值  
+				System.out.println(3.14/0);//Infinity
+				System.out.println(0/0.0);//NaN
+				
+			}
+			
+		}
+四,运算符
+	--1,分类
+		--算术运算符
+			+-*/ % ++ --
+		--三元运算符 
+			1 ? 2 : 3
+			结果取决于1,如果1成立,结果就是2,不成立结果就是3
+		--比较运算符(结果是boolean类型)
+			==  != 
+		--逻辑运算符(结果是boolean类型)
+			& |  &&  ||  +  !(取反/非)
+		--赋值运算符
+			= += -= *= /=
+		--短路与/或
+			&--单与--表示并且关系
+				--1 & 2,如果结果想得到true,要求1和2都是true
+			| --单或 --表示或者关系
+				--1 | 2,如果结果想得到true,要求1为true或2为true
+				
+			&&--双与/短路与--高效
+				--1 && 2,2有可能会被短路,,当1为false时,2就没必要执行了,就被短路了,提高了效率
+				
+			||--双或/短路或--高效
+				--1 || 2,2有可能会被短路,,当1为true时,2就没必要执行了,就被短路了,提高了效率
+
+
+	--2,练习
+		--算术运算符
+			package cn.tedu.basic;
+			//测试 算数运算符
+			public class Test4 {
+				public static void main(String[] args) {
+					//1, % -- 模,用来取余数
+					System.out.println(5%3);//2
+					System.out.println(10%2);//0
+					//2, 分别两位数的 个位 ,十位
+					int a = 25 ;
+			System.out.println(a % 10);// %是取余数-取个位数5
+			System.out.println(a / 10);// /是取商-取十位数2
+					//3, 分别三位数的 个位 ,十位,百位
+					int b = 256 ;
+					System.out.println(b % 10);//个位
+					System.out.println(b / 100);//百位
+					System.out.println(b / 10 % 10);//十位
+					
+					//4, 自增++ 自减--
+					int x = 1;
+					//符号在后,先使用再变化
+					System.out.println(x++);//1
+					
+					int y = 1;
+					//符号在前,先变化再使用
+					System.out.println(++y);//2
+					
+					System.out.println(++x+y+y+++x);//10
+									//3 + 2+ 2 + 3
+			//		System.out.println(++x+y+y++);//3+2+2=7
+					
+					//TODO 自减
+					int m = 1;
+					//符号在后,先使用再变化
+					System.out.println(m--);//1
+					
+					int n = 1;
+					//符号在前,先变化再使用
+					System.out.println(--n);//0
+					
+					System.out.println(--n+n-m--);//-1+(-1)-0=-2
+					
+				}
+			}
+		--三元运算符
+			package cn.tedu.basic;
+
+			import java.util.Scanner;
+
+			//测试 三元运算符
+			public class Test5 {
+				public static void main(String[] args) {
+					//1,比较两个数里的大值
+					System.out.println("请您输入两个数字");
+					int a = new Scanner(System.in).nextInt();
+					int b = new Scanner(System.in).nextInt();
+					//2,出结果
+			//定义变量max,记录大的值
+			//max记录的值,可能是a或者是b,具体是啥,看a>b成立不
+			//如果a>b成立,就把a交给max保存,否则就把b给max
+					int max = a > b ? a : b ;
+					System.out.println("两个数里的大值是: "+max);//10
+					
+					//3,比较三个数里的大值
+					System.out.println("请您再输入一个数字");
+					int c = new Scanner(System.in).nextInt();
+			//		int x = ?;//定义新变量,记录max和c里的大值 
+			max = max > c ? max : c ;//修改max的值,现在记录max和c里的大值 
+					System.out.println("三个数里的大值是: "+max);
+					
+				}
+			}
+
+		--平年闰年
+五,分支结构if
+	--1,概述	
+		用来解决 需要 先判断,才执行的 需求
+	--2,语法
+		单分支
+			if(判断条件){ 
+				满足了才要执行的代码 
+			}
+		多分支
+			if(判断条件){ 
+				满足了的代码1
+			}else{
+				不满足了的代码2
+			}
+		嵌套分支
+			if(判断条件1){ 
+				满足了的代码1
+			}else if(判断条件2){ 
+				满足了的代码2
+			}else if(判断条件3){ 
+				满足了的代码3
+			}else{
+				以上都不满足时,才来这儿
+			} 
+	--3,练习
+		--接收用户输入的原价。满1000打9折。满2000打8折。满5000打5折。
+		--
+
+扩展:
+	--1,计算BMI
+		--计算公式为：BMI=体重（千克）除以身高（米）的平方。
+		--體重過輕: BMI ＜ 18.5 
+		--正常範圍: 18.5≦ BMI＜24 
+		--過重：24≦ BMI＜27
+		--輕度肥胖：27≦ BMI＜30
+		--中度肥胖：30≦ BMI＜35
+		--重度肥胖：BMI≧ 35　 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+扩展:
+	--1,了解进制
+
+

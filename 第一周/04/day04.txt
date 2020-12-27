@@ -1,0 +1,283 @@
+一,分支结构1:if
+	--1,练习
+		--商品打折
+			package cn.tedu.basic;
+
+			import java.util.Scanner;
+
+			//测试 分支结构 商品打折
+			public class Test7 {
+				public static void main(String[] args) {
+					//1,定义变量,记录原价
+					System.out.println("请输入您消费的金额: ");
+					double price = new Scanner(System.in).nextDouble() ;
+					//TODO 2,判断--打印 折后价
+					double zhehouprice = 0 ;//定义变量,记录折后价
+					
+					if(price >= 5000){//满5000
+						zhehouprice = price*0.5;//打5折
+						
+					}else if(price >= 2000){ //满2000
+						zhehouprice = price*0.8;//打8折
+						
+					}else if(price >= 1000){//满1000
+						zhehouprice = price*0.9;//打9折 
+						
+					}else{//不打折
+						zhehouprice = price ;
+					}
+			System.out.println("原价是: "+price+",折后价是: "+zhehouprice);
+				}
+			}
+
+		--BMI
+			package cn.tedu.basic;
+
+			import java.util.Scanner;
+
+			public class Test8 {
+				public static void main(String[] args) {
+					System.out.println("请输入您的身高:米");
+					double gao = new Scanner(System.in).nextDouble() ;
+					
+					System.out.println("请输入您的体重:千克");
+					double tizhong = new Scanner(System.in).nextDouble() ;
+					
+			//		--计算公式为：BMI=体重（千克）除以身高（米）的平方。
+					double bmi = tizhong/(gao*gao) ;
+					
+					if(bmi<18.5){
+						System.out.println("过轻");
+					}else if(bmi >= 18.5 && bmi < 24){
+						System.out.println("正常範圍");
+					}else if(bmi >= 24 && bmi < 27){
+						System.out.println("過重");
+					}else if(bmi >= 27 && bmi < 30){
+						System.out.println("輕度肥胖");
+					}else if(bmi >= 30 && bmi < 35){
+						System.out.println("中度肥胖");
+					}else if(bmi >= 35){
+						System.out.println("重度肥胖");
+					}
+					
+				}
+			}
+
+		--统计学员得分
+			package cn.tedu.basic;
+
+			import java.util.Scanner;
+			//测试 分支结构
+			public class Test1 {
+				public static void main(String[] args) {
+					//1,接收用户输入的分数
+					System.out.println("请输入您的分数:");
+					double score = new Scanner(System.in).nextDouble() ;
+					//2,判断,并输出
+					if(score>=0 && score<=100){//增强程序的健壮性
+						if(score >= 90){
+							System.out.println("优秀");
+						}else if(score >= 80 && score <= 89){
+							System.out.println("良好");
+						}else if(score >= 70 && score <= 79){
+							System.out.println("中等");
+						}else if(score >= 60 && score <= 69){
+							System.out.println("及格");
+						}else if( score <= 60){
+							System.out.println("不及格");
+						}
+					}else{
+						System.out.println("分数不合理!!");
+					}
+					
+				}
+			}
+
+二,分支结构2:switch
+	--1,概述
+		也像if一样,可以完成 先判断 的需求
+		只支持 byte short int char String 数据类型
+	--2,语法
+		switch(判断条件){
+			case 0 : syso(0);
+			case 1 : syso(1);
+			case 2 : syso(2);
+			case 3 : syso(3);
+			case 4 : syso(4);
+			default: syso(100);//以上case都不满足才来这儿
+		}
+	--3,测试
+		package cn.tedu.basic;
+		//测试 switch
+		public class Test2 {
+			public static void main(String[] args) {
+				int a = 2 ;
+				
+				//TODO 1,表达式,,只支持 byte short int char String
+				switch(a){
+					case 0 : System.out.println(0);
+					case 1 : System.out.println(1);
+			//TODO 3,程序遇到结束符号} 或者遇到break就会结束
+					case 2 : System.out.println(2);break;
+					case 3 : System.out.println(3);
+					case 4 : System.out.println(4);
+					//TODO 2,以上case都不满足才来这儿
+					default: System.out.println(100);
+				}
+			}
+		}
+
+三,循环结构1:for
+	--1,概述
+		循环结构用来解决,,,重复要执行的代码
+	--2,语法
+		for(1;2;3){
+			重复执行的任务/循环体
+		}
+	--3,练习
+		package cn.tedu.basic;
+		//测试 循环结构
+		public class Test3 {
+			public static void main(String[] args) {
+				/*
+				 *int i = 1 是 开始位置,i表示的是次数
+				 *i <= 10000 是循环条件,执行10000次
+				 *i++ 是 更改条件,表示次数依次递增
+				 */
+				//for(开始位置;循环条件;更改条件){
+				for(int i = 1; i <= 3; i++){
+					//循环体
+					System.out.println("大家好,我叫皮皮霞");
+				}
+				//练习: 打印0到10
+				/*
+				 * int i = 0 是开始位置,
+				 * 			i表示的是你想要获取的值
+				 * i <= 10 是循环的条件
+				 * i++ 是 数据的变化规律 i=i+1
+				 */
+				for(int i = 0;i <= 10;i++){
+					System.out.println(i);
+				}
+				//练习: 打印10到0 i=i-1
+				for(int i = 10;i >= 0;i--){
+					System.out.println(i);
+				}
+				//练习: 打印8,88,888,8888,
+				//死循环--条件永远满足--条件要谨慎!!!
+		//		for(int i = 8 ; i <= 8888 ; i--){
+				for(int i = 8 ; i <= 8888 ;i=i*10+8){
+					System.out.print(i+",");//同行展示
+				}
+				
+				System.out.println();//换行
+				
+				//TODO 打印[1,100]的偶数
+				for(int i=1;i<101;i++){//循环,获取每个数字
+					if(i % 2 == 0){//找到偶数
+						//打印
+						System.out.println("偶数::"+i);
+					}
+					if(i % 2 == 1){//找到奇数
+						//打印
+						System.out.println("奇数=="+i);
+					}
+				}
+				
+			}
+		}
+
+
+四,嵌套for循环
+	--1,概述
+		使用的场景:算法 + 图形
+	--2,语法
+		for(1;2;3){//外循环
+			循环体
+			for(1;2;3){//内循环
+				循环体
+			}
+		}
+	--3,测试
+		package cn.tedu.basic;
+		//测试 嵌套for
+		public class Test4 {
+			public static void main(String[] args) {
+		//第1次循环,
+				//int i=1,满足判断条件,进去执行第三大步,
+				//输出i的值1,输出j的值1 2 3 4 5,把i自增变成2
+		//第2次循环,	
+				//int i=2,满足判断条件,进去执行第三大步,
+				//输出i的值2,输出j的值1 2 3 4 5,把i自增变成3
+		//第3次循环,	
+				//int i=3,满足判断条件,进去执行第三大步,
+				//输出i的值3,输出j的值1 2 3 4 5,把i自增变成4
+				//循环条件不再满足,循环结束!!!
+		//特点1: 外循环执行1次,内循环执行多次		
+				for(int i = 1;i < 4;i++){//外循环,执行3次
+					System.out.println(i);
+					for(int j = 1;j < 6;j++){//内循环,执行5次
+						System.out.println(j);
+					}	
+				}
+		//特点2：外循环控制行,内循环控制列		
+				for(int i = 1;i <= 3;i++){//外循环,执行3次
+					for(int j = 1;j <= 2;j++){//内循环,执行2次
+						System.out.print("*");//同行展示
+					}
+					System.out.println();//换行
+				}
+				//练习:五行五列的*
+				for(int i = 100;i < 105;i++){//外循环控制行,执行5次
+					for(int j = 100;j < 105;j++){//内循环控制列,执行5次
+						System.out.print("*");//同行展示
+					}
+					System.out.println();//换行
+				}
+				
+			}
+		}
+
+	--4,练习
+		package cn.tedu.basic;
+		//测试 嵌套for
+		public class Test5 {
+			public static void main(String[] args) {
+				//TODO 打印左直角三角形
+		//i=1,满足条件,执行第三大步,j=1;j<=1,j可以执行1次,打印*,换行
+		//i=2,满足条件,执行第三大步,j=1;j<=2,j可以执行2次,打印**,换行
+		//i=3,满足条件,执行第三大步,j=1;j<=3,j可以执行3次,打印***,换行
+		//i=4,满足条件,执行第三大步,j=1;j<=4,j可以执行4次,打印****,换行
+		//i=5,满足条件,执行第三大步,j=1;j<=5,j可以执行5次,打印*****,换行
+				for(int i=1;i<=5;i++){//外循环控制行
+					//内循环控制列,列数不能写死,得变~~~
+					for(int j=1;j<= i;j++){
+						System.out.print("*");//同行展示
+					}
+					System.out.println();//换行
+				}
+				//TODO 打印99乘法表
+				//?
+				for(int i=1;i<=9;i++){//外循环控制行
+					for(int j=1;j<= i ;j++){
+		//				System.out.print("4*2=8");//同行展示
+		//				System.out.print("行*列=乘积");//同行展示
+						System.out.print(i+"*"+j+"="+i*j+"	");//同行展示
+					}
+					System.out.println();//换行
+				}
+				
+			}
+		}
+
+
+扩展:
+	--1,求[1,100]中，奇数的个数
+	--2,求[1,100]中，偶数的和
+	--3,统计1+1/2+1/3+1/4+1/5+...+1/10的和
+	--4,打印右直角三角形(空格倒三角+右直角)
+				*
+			 **
+			***
+		 ****
+		*****
